@@ -99,10 +99,22 @@
 		
 		Start();
 		Linee();
-		var sud= new Semaforo(7,7, 0 * Math.PI/180,0);
-		var est= new Semaforo(7,-7, 90 * Math.PI/180,1);
-		var nord= new Semaforo(-7,-7, 180 * Math.PI/180,0);
-		var ovest= new Semaforo(-7,7, 270 * Math.PI/180,2);
+		var sud = new trafficLight(7,7, 0 * Math.PI/180);
+		sud.setState(trafficLightStates.GREEN.VAL);
+		scene.add(sud.mainParent);
+		
+		var est = new trafficLight(7,-7, 90 * Math.PI/180);
+		est.setState(trafficLightStates.RED.VAL);
+		scene.add(est.mainParent);
+		
+		var nord = new trafficLight(-7,-7, 180 * Math.PI/180);
+		nord.setState(trafficLightStates.GREEN.VAL);
+		scene.add(nord.mainParent);
+		
+		var ovest = new trafficLight(-7,7, 270 * Math.PI/180);
+		ovest.setState(trafficLightStates.RED.VAL);
+		scene.add(ovest.mainParent);
+		
 		var Mac=new Car();
 		Mac.Corpo.position.x=4;
 		Mac.Corpo.position.z=15;

@@ -1,88 +1,62 @@
-
-function Semaforo(a,b,c,d){
-var geometryTuboY = new THREE.BoxGeometry(0.3,6,0.3);
-			var geometryTuboX = new THREE.BoxGeometry(3,0.3,0.3);
-			var materialTubo = new THREE.MeshBasicMaterial( { color: 0xcccccc } );
+TRAFFIC_LIGHT_STATES = {GREEN: {VAL: 1, COLOR_ON: 0x00ff00, COLOR_OFF: 0x005500},
+	YELLOW: {VAL: 2, COLOR_ON: 0xffff00, COLOR_OFF: 0x555500},
+	RED: {VAL: 3, COLOR_ON: 0xff0000, COLOR_OFF: 0x550000}};
+	
+SEMAPHORE_GREY = 0xcccccc;
+BLACK = 0x000000;
+	
+function trafficLight(posX, posZ, rotY){
+	var mainMaterial = new THREE.MeshBasicMaterial({ color: SEMAPHORE_GREY});
+	this.poleVertical = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6, 0.3), mainMaterial);
+	this.poleHorizontal = new THREE.Mesh(new THREE.BoxGeometry(3, 0.3, 0.3), mainMaterial);
+	this.lightSupport = new THREE.Mesh(new THREE.BoxGeometry(1, 2.5, 1),
+		new THREE.MeshBasicMaterial({color: BLACK}));
+	
+	this.poleVertical.position.y = 3;
+	this.poleHorizontal.position.x = -1.5;
+	this.poleHorizontal.position.y = 2.85;
+	this.lightSupport.position.x= -1.5;
+	
+	var smallLight = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+	this.greenLight = new THREE.Mesh(smallLight, new THREE.MeshBasicMaterial(
+		{color: TRAFFIC_LIGHT_STATES.GREEN.COLOR_OFF}));
+	this.yellowLight = new THREE.Mesh(smallLight, new THREE.MeshBasicMaterial(
+		{color: TRAFFIC_LIGHT_STATES.YELLOW.COLOR_OFF}));
+	this.redLight = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.6),
+		new THREE.MeshBasicMaterial({color: TRAFFIC_LIGHT_STATES.RED.COLOR_OFF}));
 		
-			var TuboX = new THREE.Mesh( geometryTuboX, materialTubo);
-			//TuboX.rotation.x=90 * Math.PI/180;
-			TuboX.position.y=2.85;
-			TuboX.position.x=-1.5;
-			scene.add( TuboX );
-		
-			var TuboY = new THREE.Mesh( geometryTuboY, materialTubo );
-			TuboY.position.y=3;
-			TuboY.add(TuboX);
-			scene.add(TuboY);
-
-			var geoScatola=new THREE.BoxGeometry(1,2.5,1);
-			var nero= new THREE.MeshBasicMaterial({color:0x000000});
-			var Scatola= new THREE.Mesh(geoScatola,nero);
-			Scatola.position.x=-1.5;
-			scene.add(Scatola);
-			TuboX.add(Scatola);
-						
-			
-			var via=true;
-			var geoVerde=new THREE.BoxGeometry(0.4,0.4,0.4);
-			var verde= new THREE.MeshBasicMaterial({color:0x00ff00});
-			var Verde=new THREE.Mesh(geoVerde,verde);
-
-			var geoRosso=new THREE.BoxGeometry(0.6,0.6,0.6);
-			var rosso= new THREE.MeshBasicMaterial({color:0xff0000});
-			var Rosso=new THREE.Mesh(geoRosso,rosso);
-
-			var geoGiallo=new THREE.BoxGeometry(0.4,0.4,0.4);
-			var giallo= new THREE.MeshBasicMaterial({color:0xffff00});
-			var Giallo=new THREE.Mesh(geoGiallo,giallo);
-
-			Verde.position.z=0.5;
-			Verde.position.y=-0.8;
-			Rosso.position.z=0.5;
-			Rosso.position.y=0.8;
-			Giallo.position.z=0.5;
-
-			if(d==0){
-				Verde.material.color.setHex(0x005500);
-				scene.add(Verde);
-                Scatola.add(Verde);
-			   
-				Giallo.material.color.setHex(0x555500);
-				scene.add(Giallo);
-				Scatola.add(Giallo);
-				
-				Rosso.material.color.setHex(0xff0000);
-				scene.add(Rosso);
-				Scatola.add(Rosso);
-
-			}else if(d==1){
-				Verde.material.color.setHex(0x005500);
-				scene.add(Verde);
-                Scatola.add(Verde);
-				
-				Giallo.material.color.setHex(0xffff00);
-				scene.add(Giallo);
-				Scatola.add(Giallo);
-
-				Rosso.material.color.setHex(0x550000);
-				scene.add(Rosso);
-				Scatola.add(Rosso);
-
-			}else{
-				Verde.material.color.setHex(0x00ff00);
-				scene.add(Verde);
-                Scatola.add(Verde);
-				
-				Giallo.material.color.setHex(0x555500);
-				scene.add(Giallo);
-				Scatola.add(Giallo);
-
-				Rosso.material.color.setHex(0x550000);
-				scene.add(Rosso);
-				Scatola.add(Rosso);
-
+	this.greenLight.position.y = -0.8;
+	this.greenLight.position.z = 0.5;
+	this.yellowLight.position.z = 0.5;
+	this.redLight.position.y = 0.8;
+	this.redLight.position.z = 0.5;
+	this.poleVertical.position.x = posX;
+	this.poleVertical.position.z = posZ;
+	this.poleVertical.rotation.y = rotY;
+	
+	this.setState = function(state){
+		// turn off all lights
+		this.greenLight.material.color.setHex(TRAFFIC_LIGHT_STATES.GREEN.COLOR_OFF);
+		this.yellowLight.material.color.setHex(TRAFFIC_LIGHT_STATES.YELLOW.COLOR_OFF);
+		this.redLight.material.color.setHex(TRAFFIC_LIGHT_STATES.RED.COLOR_OFF);
+		// turn on the light corresponding to state
+		switch(state){
+				case TRAFFIC_LIGHT_STATES.GREEN.VAL:
+					this.greenLight.material.color.setHex(TRAFFIC_LIGHT_STATES.GREEN.COLOR_ON);
+					break;
+				case TRAFFIC_LIGHT_STATES.YELLOW.VAL:
+					this.yellowLight.material.color.setHex(TRAFFIC_LIGHT_STATES.YELLOW.COLOR_ON);
+					break;
+				case TRAFFIC_LIGHT_STATES.RED.VAL:
+					this.redLight.material.color.setHex(TRAFFIC_LIGHT_STATES.RED.COLOR_ON);
+					break;
 			}
-            TuboY.position.x=a;
-            TuboY.position.z=b;
-            TuboY.rotation.y=c;
-        }
+	}
+	
+	this.poleVertical.add(this.poleHorizontal);
+	this.poleHorizontal.add(this.lightSupport);
+	this.lightSupport.add(this.greenLight);
+	this.lightSupport.add(this.yellowLight);
+	this.lightSupport.add(this.redLight);
+	this.mainParent = this.poleVertical;
+}
