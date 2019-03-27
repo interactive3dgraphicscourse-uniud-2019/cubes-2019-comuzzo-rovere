@@ -20,13 +20,35 @@
 		<script src="lib/stats.min.js"></script>
 		<script src="lib/Coordinates.js"></script>
 		<script src="lib/OrbitControls.js"></script>
+		<script src="Semaforo.js"></script>
+		<script src="Linee.js"></script>
+		<script src="Car.js"></script>
 	</head>
 	<body>
 		
 		<script>
 		
 		var scene, camera, renderer, controls, stats;
+		var dummyNE = new THREE.Object3D();
+		dummyNE.position.x =9;
+		dummyNE.position.z =-9;
+		var dummyNW = new THREE.Object3D();
+		dummyNW.position.x =-9;
+		dummyNW.position.z =-9;
+		var dummySE = new THREE.Object3D();
+		dummySE.position.x =9;
+		dummySE.position.z =9;
+		var dummySW = new THREE.Object3D();
+		dummySW.position.x =-9;
+		dummySW.position.z =9;
+
+	
 		
+
+		
+
+
+
 		function Start() {
 			scene = new THREE.Scene();
 			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -39,11 +61,11 @@
 			camera.position.set(3,4,6);
 			camera.lookAt( new THREE.Vector3(0,0,0));
 			
-			var geometry = new THREE.BoxGeometry(1,1,1);
-			var material = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
-			var cube = new THREE.Mesh( geometry, material );
+			//var geometry = new THREE.BoxGeometry(1,1,1);
+			//var material = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
+			//var cube = new THREE.Mesh( geometry, material );
 			
-			scene.add( cube );
+			//scene.add( cube );
 			
 			stats = new Stats();
 			stats.domElement.style.position = 'absolute';
@@ -54,15 +76,19 @@
 			//Coordinates.drawAllAxes();
 			
 			controls = new THREE.OrbitControls( camera );
-			controls.addEventListener( 'change', Render );
-			
-			
+			controls.addEventListener( 'change', Render );	
 		}
-		
+
 		function Update() {
+			
 			requestAnimationFrame( Update );
+
+			Mac.move('N',0.01);
+			Mac2.rotateCounterClockwise(dummySE);
+			Mac3.rotateClockwise(dummySW);
 			controls.update();  
 			stats.update();
+			
 			Render();
 		}
 		
@@ -72,6 +98,27 @@
 		}
 		
 		Start();
+		Linee();
+		var sud= new Semaforo(7,7, 0 * Math.PI/180,0);
+		var est= new Semaforo(7,-7, 90 * Math.PI/180,1);
+		var nord= new Semaforo(-7,-7, 180 * Math.PI/180,0);
+		var ovest= new Semaforo(-7,7, 270 * Math.PI/180,2);
+		var Mac=new Car();
+		Mac.Corpo.position.x=4;
+		Mac.Corpo.position.z=15;
+		
+		var Mac2=new Car();
+		Mac2.Corpo.position.z=-12;
+		Mac2.Corpo.rotation.y=90 * Math.PI/180;
+		
+		var Mac3=new Car();
+		Mac3.Corpo.rotation.y=90 * Math.PI/180;
+		Mac3.Corpo.position.z=-5;
+
+		scene.add( dummyNE );
+		scene.add( dummyNW );
+		scene.add( dummySE );
+		scene.add( dummySW );
 		Update();
 			
 		</script>
