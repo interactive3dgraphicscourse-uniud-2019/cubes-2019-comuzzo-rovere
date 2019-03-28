@@ -27,6 +27,11 @@
 	<body>
 		
 		<script>
+		RAD_TO_DEG_COEFF = Math.PI/180;
+		ANGLE_90 = 90 * RAD_TO_DEG_COEFF;
+		ANGLE_180 = 180 * RAD_TO_DEG_COEFF;
+		ANGLE_270 = 270 * RAD_TO_DEG_COEFF;
+		
 		var crossroadRadius = 7;
 		var roadLength = 27;
 		var scene, camera, renderer, controls, stats;
@@ -97,7 +102,9 @@
 		}
 		
 		Start();
-		Linee(crossroadRadius, roadLength);
+		var crossroad = new CrossroadStreet(crossroadRadius, roadLength);
+		scene.add(crossroad.mainParent);
+		
 		var sud = new trafficLight(7,7, 0 * Math.PI/180);
 		sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 		scene.add(sud.mainParent);
