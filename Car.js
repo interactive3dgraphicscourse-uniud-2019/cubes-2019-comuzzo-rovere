@@ -1,8 +1,7 @@
 
 class Car{
-     Corpo;
-    constructor(){
     
+    constructor(){
     var geometryTuboX = new THREE.BoxGeometry(2,1,4);
     var materialTubo = new THREE.MeshBasicMaterial( { color: 0x000ff } );
     this.Corpo = new THREE.Mesh( geometryTuboX, materialTubo);
@@ -44,35 +43,134 @@ class Car{
     scene.add(this.Corpo);
 }
 
-move(c, l){
+move(c){
     switch(c){
         case 'N':
-            this.Corpo.position.z-=l;
+            this.Corpo.position.z-=0.1;
             break
         case 'S':
-            this.Corpo.position.z+=l;
+            this.Corpo.position.x+=0.1;
             break
         case 'E':
-            this.Corpo.position.x+=l;
+            this.Corpo.position.x+=0.1;
             break
         case 'W':
-            this.Corpo.position.x-=l;
+            this.Corpo.position.x-=0.1;
             break
     }     
 }
 
- rotateCounterClockwise(dummy){
-    dummy.add( this.Corpo );
+ rotateLeft(dummy){
+    
     if(dummy.rotation.y <89 * Math.PI/180){
         dummy.rotation.y+=0.01;
         }
  }
- rotateClockwise(dummy){
-    dummy.add( this.Corpo );
+
+ rotateRigth(dummy){
+    
     if(dummy.rotation.y >-90 * Math.PI/180){
         dummy.rotation.y-=0.01;
         }
-
  }
+
+
+
+PercorsoStoW(dummySW){
+    if(this.Corpo.position.z >= 0 && dummySW.rotation.y==0){
+        this.move('N',0.1);
+    }
+    if(this.Corpo.position.z <= 0){
+        this.rotateLeft(dummySW);
+    }
+    if(dummySW.rotation.y >= 89 * Math.PI/180){
+        this.move('N',0.1);
+    }
+}
+
+PercorsoStoE(dummySE){
+    if(this.Corpo.position.z >= 0 && dummySE.rotation.y==0 ){
+        this.move('N',0.1);
+    }
+    if(this.Corpo.position.z <= 0){
+        this.rotateRigth(dummySE);
+    }  
+    if(dummySE.rotation.y <= -89 * Math.PI/180){
+        this.move('N',0.1);
+    }
+}
+
+PercorsoEtoS(dummySE){
+    if(this.Corpo.position.x >= 0 && dummySE.rotation.y==0){
+        this.move('W',0.1);
+    }
+    if(this.Corpo.position.x <= 0){
+        this.rotateLeft(dummySE);
+    }
+    if(dummySE.rotation.y >= 89 * Math.PI/180){
+        this.move('W',0.1);
+    }
+}
+
+PercorsoEtoN(dummyNE){
+    if(this.Corpo.position.x >= 0  && dummyNE.rotation.y==0){
+        this.move('W',0.1);
+    }
+    if(this.Corpo.position.x <= 0){
+        this.rotateRigth(dummyNE);
+    }
+    if(dummyNE.rotation.y <= -89 * Math.PI/180){
+        this.move('W',0.1);
+    }
+}
+
+PercorsoNtoE(dummyNE){
+    if(this.Corpo.position.z <= 0 && dummyNE.rotation.y==0){
+        this.move('S',0.1);
+    }
+    if(this.Corpo.position.z >= 0){
+        this.rotateLeft(dummyNE);
+    }
+    if(dummyNE.rotation.y >= 89 * Math.PI/180){
+        this.move('S',0.1);
+    }
+}
+
+PercorsoNtoW(dummyNW){
+    if(this.Corpo.position.z <= 0 && dummyNW.rotation.y==0){
+        this.move('S',0.1);
+    }
+    if(this.Corpo.position.z >= 0){
+        this.rotateRigth(dummyNW);
+    }
+    if(dummyNW.rotation.y <= -89 * Math.PI/180){
+        this.move('S',0.1);
+    }
+}
+
+PercorsoWtoN(dummyNW){
+    if(this.Corpo.position.x <= 0 && dummyNW.rotation.y==0){
+        this.move('E',0.1);
+    }
+    if(this.Corpo.position.x >= 0){
+        this.rotateLeft(dummyNW);
+    }
+    if(dummyNW.rotation.y >= 89 * Math.PI/180 ){
+        this.move('E',0.1);
+    }
+}
+
+PercorsoWtoS(dummySW){
+    if(this.Corpo.position.x <= 0 && dummySW.rotation.y==0){
+        this.move('E',0.1);
+    }
+    if(this.Corpo.position.x >= 0){
+        this.rotateRigth(dummySW);
+    }
+    if(dummySW.rotation.y <= -89 * Math.PI/180){
+        this.move('E',0.1);
+    }
+}
+
 
 }

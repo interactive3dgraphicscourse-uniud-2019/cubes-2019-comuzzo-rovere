@@ -76,44 +76,57 @@
 			//Coordinates.drawAllAxes();
 			
 			controls = new THREE.OrbitControls( camera );
-			controls.addEventListener( 'change', Render );	
+			controls.addEventListener( 'change', Render );
+			camera.position.z=20;	
 		}
 
 		function Update() {
 			
 			requestAnimationFrame( Update );
-
 			Mac.move('N',0.01);
-			Mac2.rotateCounterClockwise(dummySE);
-			Mac3.rotateClockwise(dummySW);
+			Mac2.PercorsoStoW(dummySW);
+			Mac3.PercorsoWtoN(dummyNW);
 			controls.update();  
 			stats.update();
-			
 			Render();
 		}
 		
 		function Render() {
-			
 			renderer.render(scene, camera);
 		}
 		
 		Start();
 		Linee();
-		var sud= new Semaforo(7,7, 0 * Math.PI/180,0);
-		var est= new Semaforo(7,-7, 90 * Math.PI/180,1);
-		var nord= new Semaforo(-7,-7, 180 * Math.PI/180,0);
-		var ovest= new Semaforo(-7,7, 270 * Math.PI/180,2);
+		var sud = new trafficLight(7,7, 0 * Math.PI/180);
+		sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		scene.add(sud.mainParent);
+
+		var est = new trafficLight(7,-7, 90 * Math.PI/180);
+		est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+		scene.add(est.mainParent);
+
+		var nord = new trafficLight(-7,-7, 180 * Math.PI/180);
+		nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		scene.add(nord.mainParent);
+
+		var ovest = new trafficLight(-7,7, 270 * Math.PI/180);
+		ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+		scene.add(ovest.mainParent);
+
 		var Mac=new Car();
 		Mac.Corpo.position.x=4;
 		Mac.Corpo.position.z=15;
 		
 		var Mac2=new Car();
-		Mac2.Corpo.position.z=-12;
-		Mac2.Corpo.rotation.y=90 * Math.PI/180;
+		Mac2.Corpo.position.z=11;
+		Mac2.Corpo.position.x=11;
+		dummySW.add( Mac2.Corpo );
 		
 		var Mac3=new Car();
 		Mac3.Corpo.rotation.y=90 * Math.PI/180;
-		Mac3.Corpo.position.z=-5;
+		Mac3.Corpo.position.z=12;
+		Mac3.Corpo.position.x=-12;
+		dummyNW.add(Mac3.Corpo);
 
 		scene.add( dummyNE );
 		scene.add( dummyNW );
