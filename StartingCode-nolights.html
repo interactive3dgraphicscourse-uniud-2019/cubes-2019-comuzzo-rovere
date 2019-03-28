@@ -27,7 +27,8 @@
 	<body>
 		
 		<script>
-		
+		var crossroadRadius = 7;
+		var roadLength = 27;
 		var scene, camera, renderer, controls, stats;
 		var dummyNE = new THREE.Object3D();
 		dummyNE.position.x =9;
@@ -96,9 +97,8 @@
 		}
 		
 		Start();
-		Linee();
+		Linee(crossroadRadius, roadLength);
 		var sud = new trafficLight(7,7, 0 * Math.PI/180);
-
 		sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 		scene.add(sud.mainParent);
 

@@ -1,6 +1,5 @@
 
 class Car{
-    
     constructor(){
     var geometryTuboX = new THREE.BoxGeometry(2,1,4);
     var materialTubo = new THREE.MeshBasicMaterial( { color: 0x000ff } );
