@@ -23,6 +23,7 @@
 		<script src="Semaforo.js"></script>
 		<script src="Linee.js"></script>
 		<script src="Car.js"></script>
+		<script src="lib/dat.gui.min.js"></script>
 	</head>
 	<body>
 		
@@ -43,10 +44,32 @@
 		dummySW.position.x =-9;
 		dummySW.position.z =9;
 
-	
-		
 
-		
+
+		var options = {
+  		
+			VerdeSuZ: function() {
+			sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+		  },
+		  VerdeSuX: function() {
+			sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		  },
+
+	};
+	
+	var gui = new dat.GUI();
+	gui.add(options, 'VerdeSuZ');
+	gui.add(options, 'VerdeSuX');	
+				
+				
+				
+				
 
 
 
@@ -62,19 +85,10 @@
 			camera.position.set(3,4,6);
 			camera.lookAt( new THREE.Vector3(0,0,0));
 			
-			//var geometry = new THREE.BoxGeometry(1,1,1);
-			//var material = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
-			//var cube = new THREE.Mesh( geometry, material );
-			
-			//scene.add( cube );
-			
 			stats = new Stats();
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
 			document.body.appendChild( stats.domElement );
-			
-			// uncomment if you need to draw coordinate axes when building the scene
-			//Coordinates.drawAllAxes();
 			
 			controls = new THREE.OrbitControls( camera );
 			controls.addEventListener( 'change', Render );
