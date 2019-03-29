@@ -24,6 +24,8 @@
 		<script src="Linee.js"></script>
 		<script src="Car.js"></script>
 		<script src="lib/dat.gui.min.js"></script>
+		<script src="Albero.js"></script>
+		<script src="Pino.js"></script>
 	</head>
 	<body>
 		
@@ -138,6 +140,13 @@
 			scene.add( dummyNW );
 			scene.add( dummySE );
 			scene.add( dummySW );
+
+			Albero1= new Albero(11,11);
+			Albero2= new Albero(15,-11);
+			Albero3= new Albero(11,20);
+			Albero4= new Albero(-13,10);
+			Pino1=new Pino(-13,-10)
+			Pino2=new Pino(14,-14)
 		}
 
 		function Update() {
