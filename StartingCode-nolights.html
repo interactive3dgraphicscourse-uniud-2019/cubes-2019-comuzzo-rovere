@@ -122,7 +122,7 @@
 			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 			Mac.Corpo.position.x = 4;
-			Mac.Corpo.position.z = 15;
+			Mac.Corpo.position.z = 35;
 			Mac2.Corpo.position.z = 20;
 			Mac2.Corpo.position.x = 13;
 			Mac3.Corpo.rotation.y = ANGLE_90;
@@ -151,7 +151,7 @@
 
 		function Update() {
 			requestAnimationFrame( Update );
-			Mac.move('N',0.01);
+			Mac.fullMove('N', sud.stato);
 			Mac2.PercorsoStoW(dummySW, sud.stato);
 			Mac3.PercorsoWtoN(dummyNW, ovest.stato);
 			controls.update();  

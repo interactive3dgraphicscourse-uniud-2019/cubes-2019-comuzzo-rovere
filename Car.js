@@ -42,21 +42,53 @@ class Car{
     scene.add(this.Corpo);
 }
 
-move(c){
+
+fullMove(c, stato){
+    
     switch(c){
         case 'N':
+        if(stato=='G' || this.Corpo.position.z < 0){
             this.Corpo.position.z-=0.1;
+        }
             break
         case 'S':
-            this.Corpo.position.x+=0.1;
-            break
+        if(stato=='G' || this.Corpo.position.z > 0){
+             this.Corpo.position.z+=0.1;
+        }
+             break
         case 'E':
+        if(stato=='G' || this.Corpo.position.x > 0){
             this.Corpo.position.x+=0.1;
-            break
+        }
+             break
         case 'W':
+        if(stato=='G' || this.Corpo.position.x < 0){
             this.Corpo.position.x-=0.1;
-            break
-    }     
+        }
+             break
+    }  
+
+}
+
+
+
+move(c, stato){
+    
+        switch(c){
+            case 'N':
+                this.Corpo.position.z-=0.1;
+                break
+            case 'S':
+                 this.Corpo.position.x+=0.1;
+                 break
+            case 'E':
+                this.Corpo.position.x+=0.1;
+                 break
+            case 'W':
+                this.Corpo.position.x-=0.1;
+                 break
+        }  
+         
 }
 
  rotateLeft(dummy){
