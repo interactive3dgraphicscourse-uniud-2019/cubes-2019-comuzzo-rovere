@@ -54,29 +54,31 @@
 		var options = {
   		
 			VerdeSuZ: function() {
-		
-			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+				if(est.stato=='G'){
+					est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 
-			sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-			nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-			setTimeout(function(){
-			sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-			}, 500)
-		
-		  },
-		  VerdeSuX: function() {
-			sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+					nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+					setTimeout(function(){
+						sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+						nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+					}, 500)
+				}
+			},
+		  	VerdeSuX: function() {
+				if(sud.stato=='G'){
+					sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 
-			est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-			ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-			setTimeout(function(){
-			est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-			ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-			}, 500)
-		  },
+					est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+					ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+					setTimeout(function(){
+						est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+						ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+					}, 500)
+				}
+			},
 
 	};
 	

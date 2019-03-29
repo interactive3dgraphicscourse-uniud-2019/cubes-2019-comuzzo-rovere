@@ -6,6 +6,7 @@ SEMAPHORE_GREY = 0xcccccc;
 BLACK = 0x000000;
 	
 function trafficLight(posX, posZ, rotY){
+	var stato;
 	var mainMaterial = new THREE.MeshBasicMaterial({ color: SEMAPHORE_GREY});
 	this.poleVertical = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6, 0.3), mainMaterial);
 	this.poleHorizontal = new THREE.Mesh(new THREE.BoxGeometry(3, 0.3, 0.3), mainMaterial);
@@ -43,12 +44,15 @@ function trafficLight(posX, posZ, rotY){
 		switch(state){
 				case TRAFFIC_LIGHT_STATES.GREEN.VAL:
 					this.greenLight.material.color.setHex(TRAFFIC_LIGHT_STATES.GREEN.COLOR_ON);
+					this.stato='G';
 					break;
 				case TRAFFIC_LIGHT_STATES.YELLOW.VAL:
 					this.yellowLight.material.color.setHex(TRAFFIC_LIGHT_STATES.YELLOW.COLOR_ON);
+					this.stato='Y';
 					break;
 				case TRAFFIC_LIGHT_STATES.RED.VAL:
 					this.redLight.material.color.setHex(TRAFFIC_LIGHT_STATES.RED.COLOR_ON);
+					this.stato='R';
 					break;
 			}
 	}
