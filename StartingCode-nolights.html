@@ -36,6 +36,8 @@
 		var crossroadRadius = 7;
 		var roadLength = 27;
 		var scene, camera, renderer, controls, stats;
+		var crossroad, nord, sud, est, ovest, Mac, Mac2, Mac3;
+		var gui;
 		var dummyNE = new THREE.Object3D();
 		dummyNE.position.x =9;
 		dummyNE.position.z =-9;
@@ -52,14 +54,11 @@
 
 
 		var options = {
-  		
 			VerdeSuZ: function() {
 				if(est.stato=='G'){
-				
-
 					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 					nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-
+					
 					setTimeout(function(){
 						est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 					ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
@@ -81,20 +80,9 @@
 					}, 3500)
 				}
 			},
-
 	};
-	
-	var gui = new dat.GUI();
-	gui.add(options, 'VerdeSuZ');
-	gui.add(options, 'VerdeSuX');	
-				
-				
-				
-				
 
-
-
-		function Start() {
+	function Start() {
 			scene = new THREE.Scene();
 			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -113,11 +101,46 @@
 			
 			controls = new THREE.OrbitControls( camera );
 			controls.addEventListener( 'change', Render );
-			camera.position.z=20;	
+			gui = new dat.GUI();
+			gui.add(options, 'VerdeSuZ');
+			gui.add(options, 'VerdeSuX');
+			camera.position.z = 20;
+			
+			crossroad = new CrossroadStreet(crossroadRadius, roadLength);
+			sud = new trafficLight(crossroadRadius, crossroadRadius, 0);
+			est = new trafficLight(crossroadRadius, -crossroadRadius, ANGLE_90);
+			nord = new trafficLight(-crossroadRadius, -crossroadRadius, ANGLE_180);
+			ovest = new trafficLight(-crossroadRadius, crossroadRadius, ANGLE_270);
+			Mac = new Car();
+			Mac2 = new Car();
+			Mac3 = new Car();
+			
+			sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			Mac.Corpo.position.x = 4;
+			Mac.Corpo.position.z = 15;
+			Mac2.Corpo.position.z = 20;
+			Mac2.Corpo.position.x = 13;
+			Mac3.Corpo.rotation.y = ANGLE_90;
+			Mac3.Corpo.position.z = 12;
+			Mac3.Corpo.position.x = -12;
+			
+			scene.add(crossroad.mainParent);
+			scene.add(sud.mainParent);
+			scene.add(est.mainParent);
+			scene.add(nord.mainParent);
+			scene.add(ovest.mainParent);
+			dummySW.add( Mac2.Corpo );
+			dummyNW.add(Mac3.Corpo);
+			scene.add( dummyNE );
+			scene.add( dummyNW );
+			scene.add( dummySE );
+			scene.add( dummySW );
 		}
 
 		function Update() {
-			
 			requestAnimationFrame( Update );
 			Mac.move('N',0.01);
 			Mac2.PercorsoStoW(dummySW, sud.stato);
@@ -132,44 +155,6 @@
 		}
 		
 		Start();
-		var crossroad = new CrossroadStreet(crossroadRadius, roadLength);
-		scene.add(crossroad.mainParent);
-
-		var sud = new trafficLight(7,7, 0 * Math.PI/180);
-		sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-		scene.add(sud.mainParent);
-
-		var est = new trafficLight(7,-7, 90 * Math.PI/180);
-		est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-		scene.add(est.mainParent);
-
-		var nord = new trafficLight(-7,-7, 180 * Math.PI/180);
-		nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-		scene.add(nord.mainParent);
-
-		var ovest = new trafficLight(-7,7, 270 * Math.PI/180);
-		ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-		scene.add(ovest.mainParent);
-
-		var Mac=new Car();
-		Mac.Corpo.position.x=4;
-		Mac.Corpo.position.z=15;
-		
-		var Mac2=new Car();
-		Mac2.Corpo.position.z=20;
-		Mac2.Corpo.position.x=13;
-		dummySW.add( Mac2.Corpo );
-		
-		var Mac3=new Car();
-		Mac3.Corpo.rotation.y=90 * Math.PI/180;
-		Mac3.Corpo.position.z=12;
-		Mac3.Corpo.position.x=-12;
-		dummyNW.add(Mac3.Corpo);
-
-		scene.add( dummyNE );
-		scene.add( dummyNW );
-		scene.add( dummySE );
-		scene.add( dummySW );
 		Update();
 			
 		</script>
