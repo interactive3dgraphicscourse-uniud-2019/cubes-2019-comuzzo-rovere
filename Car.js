@@ -75,11 +75,11 @@ move(c){
 
 
 
-PercorsoStoW(dummySW){
+PercorsoStoW(dummySW, VerdeSud){
     if(this.Corpo.position.z >= 0 && dummySW.rotation.y==0){
         this.move('N',0.1);
     }
-    if(this.Corpo.position.z <= 0){
+    if(this.Corpo.position.z <= 0 && (VerdeSud=='G' ||dummySW.rotation.y > 0* Math.PI/180)){
         this.rotateLeft(dummySW);
     }
     if(dummySW.rotation.y >= 89 * Math.PI/180){
@@ -87,11 +87,11 @@ PercorsoStoW(dummySW){
     }
 }
 
-PercorsoStoE(dummySE){
+PercorsoStoE(dummySE, VerdeSud){
     if(this.Corpo.position.z >= 0 && dummySE.rotation.y==0 ){
         this.move('N',0.1);
     }
-    if(this.Corpo.position.z <= 0){
+    if(this.Corpo.position.z <=  0 && (VerdeSud=='G' || dummySE.rotation.y < 0 * Math.PI/180)){
         this.rotateRigth(dummySE);
     }  
     if(dummySE.rotation.y <= -89 * Math.PI/180){
@@ -99,11 +99,11 @@ PercorsoStoE(dummySE){
     }
 }
 
-PercorsoEtoS(dummySE){
+PercorsoEtoS(dummySE, VerdeEst){
     if(this.Corpo.position.x >= 0 && dummySE.rotation.y==0){
         this.move('W',0.1);
     }
-    if(this.Corpo.position.x <= 0){
+    if(this.Corpo.position.x <= 0 && (VerdeEst=='G' || dummySE.rotation.y > 0 * Math.PI/180 )){
         this.rotateLeft(dummySE);
     }
     if(dummySE.rotation.y >= 89 * Math.PI/180){
@@ -111,11 +111,11 @@ PercorsoEtoS(dummySE){
     }
 }
 
-PercorsoEtoN(dummyNE){
+PercorsoEtoN(dummyNE, VerdeEst){
     if(this.Corpo.position.x >= 0  && dummyNE.rotation.y==0){
         this.move('W',0.1);
     }
-    if(this.Corpo.position.x <= 0){
+    if(this.Corpo.position.x <= 0 && (VerdeEst=='G' || dummyNE.rotation.y < 0 * Math.PI/180)){
         this.rotateRigth(dummyNE);
     }
     if(dummyNE.rotation.y <= -89 * Math.PI/180){
@@ -123,11 +123,11 @@ PercorsoEtoN(dummyNE){
     }
 }
 
-PercorsoNtoE(dummyNE){
+PercorsoNtoE(dummyNE, VerdeNord){
     if(this.Corpo.position.z <= 0 && dummyNE.rotation.y==0){
         this.move('S',0.1);
     }
-    if(this.Corpo.position.z >= 0){
+    if(this.Corpo.position.z >= 0 && (VerdeNord=='G' || dummyNE.rotation.y > 0 * Math.PI/180)){
         this.rotateLeft(dummyNE);
     }
     if(dummyNE.rotation.y >= 89 * Math.PI/180){
@@ -135,11 +135,11 @@ PercorsoNtoE(dummyNE){
     }
 }
 
-PercorsoNtoW(dummyNW){
+PercorsoNtoW(dummyNW, VerdeNord){
     if(this.Corpo.position.z <= 0 && dummyNW.rotation.y==0){
         this.move('S',0.1);
     }
-    if(this.Corpo.position.z >= 0){
+    if(this.Corpo.position.z >= 0 && (VerdeNord=='G' || dummyNW.rotation.y < 0 * Math.PI/180)){
         this.rotateRigth(dummyNW);
     }
     if(dummyNW.rotation.y <= -89 * Math.PI/180){
@@ -147,11 +147,11 @@ PercorsoNtoW(dummyNW){
     }
 }
 
-PercorsoWtoN(dummyNW){
+PercorsoWtoN(dummyNW, VerdeWest){
     if(this.Corpo.position.x <= 0 && dummyNW.rotation.y==0){
         this.move('E',0.1);
     }
-    if(this.Corpo.position.x >= 0){
+    if(this.Corpo.position.x >= 0 && (VerdeWest=='G' || dummyNW.rotation.y > 0)){
         this.rotateLeft(dummyNW);
     }
     if(dummyNW.rotation.y >= 89 * Math.PI/180 ){
@@ -159,11 +159,11 @@ PercorsoWtoN(dummyNW){
     }
 }
 
-PercorsoWtoS(dummySW){
+PercorsoWtoS(dummySW, VerdeWest){
     if(this.Corpo.position.x <= 0 && dummySW.rotation.y==0){
         this.move('E',0.1);
     }
-    if(this.Corpo.position.x >= 0){
+    if(this.Corpo.position.x >= 0 && (VerdeWest=='G' || dummySW.rotation.y < 0 * Math.PI/180)){
         this.rotateRigth(dummySW);
     }
     if(dummySW.rotation.y <= -89 * Math.PI/180){

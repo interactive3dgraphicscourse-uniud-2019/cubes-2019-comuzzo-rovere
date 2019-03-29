@@ -55,28 +55,30 @@
   		
 			VerdeSuZ: function() {
 				if(est.stato=='G'){
-					est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-					ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+				
 
 					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 					nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+
 					setTimeout(function(){
+						est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 						sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 						nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-					}, 500)
+					}, 3500)
 				}
 			},
 		  	VerdeSuX: function() {
 				if(sud.stato=='G'){
-					sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-					nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-
 					est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 					ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+
 					setTimeout(function(){
+						sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+						nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 						est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 						ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-					}, 500)
+					}, 3500)
 				}
 			},
 
@@ -118,8 +120,8 @@
 			
 			requestAnimationFrame( Update );
 			Mac.move('N',0.01);
-			Mac2.PercorsoStoW(dummySW);
-			Mac3.PercorsoWtoN(dummyNW);
+			Mac2.PercorsoStoW(dummySW, sud.stato);
+			Mac3.PercorsoWtoN(dummyNW, ovest.stato);
 			controls.update();  
 			stats.update();
 			Render();
@@ -154,8 +156,8 @@
 		Mac.Corpo.position.z=15;
 		
 		var Mac2=new Car();
-		Mac2.Corpo.position.z=11;
-		Mac2.Corpo.position.x=11;
+		Mac2.Corpo.position.z=20;
+		Mac2.Corpo.position.x=13;
 		dummySW.add( Mac2.Corpo );
 		
 		var Mac3=new Car();
