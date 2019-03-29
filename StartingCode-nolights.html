@@ -23,6 +23,7 @@
 		<script src="Semaforo.js"></script>
 		<script src="Linee.js"></script>
 		<script src="Car.js"></script>
+		<script src="lib/dat.gui.min.js"></script>
 	</head>
 	<body>
 		
@@ -48,10 +49,48 @@
 		dummySW.position.x =-9;
 		dummySW.position.z =9;
 
-	
-		
 
-		
+
+		var options = {
+  		
+			VerdeSuZ: function() {
+				if(est.stato=='G'){
+				
+
+					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+					nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+
+					setTimeout(function(){
+						est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+						sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+						nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+					}, 3500)
+				}
+			},
+		  	VerdeSuX: function() {
+				if(sud.stato=='G'){
+					est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+					ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+
+					setTimeout(function(){
+						sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+						nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+						est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+						ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+					}, 3500)
+				}
+			},
+
+	};
+	
+	var gui = new dat.GUI();
+	gui.add(options, 'VerdeSuZ');
+	gui.add(options, 'VerdeSuX');	
+				
+				
+				
+				
 
 
 
@@ -67,19 +106,10 @@
 			camera.position.set(3,4,6);
 			camera.lookAt( new THREE.Vector3(0,0,0));
 			
-			//var geometry = new THREE.BoxGeometry(1,1,1);
-			//var material = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
-			//var cube = new THREE.Mesh( geometry, material );
-			
-			//scene.add( cube );
-			
 			stats = new Stats();
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
 			document.body.appendChild( stats.domElement );
-			
-			// uncomment if you need to draw coordinate axes when building the scene
-			//Coordinates.drawAllAxes();
 			
 			controls = new THREE.OrbitControls( camera );
 			controls.addEventListener( 'change', Render );
@@ -90,8 +120,8 @@
 			
 			requestAnimationFrame( Update );
 			Mac.move('N',0.01);
-			Mac2.PercorsoStoW(dummySW);
-			Mac3.PercorsoWtoN(dummyNW);
+			Mac2.PercorsoStoW(dummySW, sud.stato);
+			Mac3.PercorsoWtoN(dummyNW, ovest.stato);
 			controls.update();  
 			stats.update();
 			Render();
@@ -126,8 +156,8 @@
 		Mac.Corpo.position.z=15;
 		
 		var Mac2=new Car();
-		Mac2.Corpo.position.z=11;
-		Mac2.Corpo.position.x=11;
+		Mac2.Corpo.position.z=20;
+		Mac2.Corpo.position.x=13;
 		dummySW.add( Mac2.Corpo );
 		
 		var Mac3=new Car();
