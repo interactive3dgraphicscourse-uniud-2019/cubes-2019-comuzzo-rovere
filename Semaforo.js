@@ -4,6 +4,7 @@ TRAFFIC_LIGHT_STATES = {GREEN: {VAL: 1, COLOR_ON: 0x00ff00, COLOR_OFF: 0x005500}
 	
 SEMAPHORE_GREY = 0xcccccc;
 BLACK = 0x000000;
+
 	
 function trafficLight(posX, posZ, rotY){
 	var stato;
