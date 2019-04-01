@@ -51,6 +51,9 @@
 		var gui, spawn;
 		var lastTickTime;
 		var carQueue, outQueue;
+		var trafficLightStateNS;
+		var trafficLightStateEW;
+		var wantNSGreen;
 
 
 		var options = {
@@ -58,37 +61,9 @@
 			spawnWest : 0.1,
 			spawnNorth : 0.1,
 			spawnSouth : 0.1,
-			VerdeSuZ: function() {
-				if(est.stato=='G'){
-					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-					nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-					
-					setTimeout(function(){
-						est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-						ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-
-						sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-						nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-					}, 3500)
-				}
-			},
-		  	VerdeSuX: function() {
-				if(sud.stato=='G'){
-					est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-					ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-					
-					setTimeout(function(){
-						sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-						nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-						est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-						ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-					}, 3500)
-				}
-			},
-			
-
-			
-	};
+			VerdeSuZ: function() { wantNSGreen = true;  },
+		  	VerdeSuX: function() { wantNSGreen = false; }
+		};
 
 	function Start() {
 			scene = new THREE.Scene();
@@ -133,6 +108,11 @@
 			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			
+			trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
+			trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
+			wantNSGreen = true;
+
 			
 			scene.add(crossroad.mainParent);
 			scene.add(sud.mainParent);
@@ -230,21 +210,86 @@
 				if(crossedCar4 != 0){
 					outQueue.add(crossedCar4);
 				}
-
 				
-				carEastQueue.startTick(true);
+				if(wantNSGreen){
+					if(trafficLightStateNS == TRAFFIC_LIGHT_STATES.RED.VAL){
+						switch(trafficLightStateEW){
+							case TRAFFIC_LIGHT_STATES.GREEN.VAL:
+								trafficLightStateEW = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
+								est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+								ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+								break;
+							case TRAFFIC_LIGHT_STATES.YELLOW.VAL:
+								trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
+								trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
+								est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+								ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+								sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+								nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+								break;
+						}
+					}
+				} else {
+					if(trafficLightStateEW == TRAFFIC_LIGHT_STATES.RED.VAL){
+						switch(trafficLightStateNS){
+							case TRAFFIC_LIGHT_STATES.GREEN.VAL:
+								trafficLightStateNS = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
+								nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+								sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+								break;
+							case TRAFFIC_LIGHT_STATES.YELLOW.VAL:
+								trafficLightStateNS = TRAFFIC_LIGHT_STATES.RED.VAL;
+								trafficLightStateEW = TRAFFIC_LIGHT_STATES.GREEN.VAL;
+								nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+								sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+								est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+								ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+								break;
+						}
+					}
+				}
+				
+				if(trafficLightStateNS != TRAFFIC_LIGHT_STATES.GREEN.VAL){
+					carNorthQueue.startTick(false);
+					carSouthQueue.startTick(false);
+				} else {
+					var northHead = carNorthQueue.getHead();
+					var southHead = carSouthQueue.getHead();
+					var canGoN = true;
+					var canGoS = true;
+					if(northHead != 0 && southHead != 0){
+						if(northHead.turnDir == TURN_DIR.LEFT && southHead.turnDir != TURN_DIR.LEFT){
+							canGoN = false;
+						} else if(northHead.turnDir != TURN_DIR.LEFT && southHead.turnDir == TURN_DIR.LEFT){
+							canGoS = false;
+						}
+					}
+					carNorthQueue.startTick(canGoN);
+					carSouthQueue.startTick(canGoS);
+					
+				}
+				if(trafficLightStateEW != TRAFFIC_LIGHT_STATES.GREEN.VAL){
+					carEastQueue.startTick(false);
+					carWestQueue.startTick(false);
+				} else {
+					var eastHead = carEastQueue.getHead();
+					var westHead = carWestQueue.getHead();
+					var canGoE = true;
+					var canGoW = true;
+					if(eastHead != 0 && westHead != 0){
+						if(eastHead.turnDir == TURN_DIR.LEFT && westHead.turnDir != TURN_DIR.LEFT){
+							canGoE = false;
+						} else if(eastHead.turnDir != TURN_DIR.LEFT && westHead.turnDir == TURN_DIR.LEFT){
+							canGoW = false;
+						}
+					}
+					carEastQueue.startTick(canGoE);
+					carWestQueue.startTick(canGoW);
+				}
+				
 				carEastQueue.update((TICK_TIME - passedTime)/TICK_TIME);
-
-				
-				carSouthQueue.startTick(true);
 				carSouthQueue.update((TICK_TIME - passedTime)/TICK_TIME);
-
-			
-				carWestQueue.startTick(true);
 				carWestQueue.update((TICK_TIME - passedTime)/TICK_TIME);
-
-			
-				carNorthQueue.startTick(true);
 				carNorthQueue.update((TICK_TIME - passedTime)/TICK_TIME);
 
 				outQueue.update((TICK_TIME - passedTime)/TICK_TIME);
