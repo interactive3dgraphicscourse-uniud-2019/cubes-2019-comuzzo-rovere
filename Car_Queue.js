@@ -73,11 +73,20 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 		if(head != 0 && head.isMoving){
 			switch(head.turnDir){
 				case TURN_DIR.STRAIGHT: // TODO
+					if(percentage<0.5){
+						head.setDistFromOrigin((0.5-percentage) * 2 * (this.crossroadRadius + 2));
+
+					}else{
+						head.setDistFromOrigin((percentage -0.5) * 2 * (this.crossroadRadius + 2) * -1);
+
+					}
+
 				break;
 				case TURN_DIR.LEFT:
 					head.pivot.rotation.y = ANGLE_90 * percentage;
 				break;
 				case TURN_DIR.RIGHT:
+					percentage=(percentage*2)%1 -percentage;
 					head.pivot.rotation.y = -ANGLE_90 * percentage;
 				break;
 			}
@@ -112,9 +121,15 @@ function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
 	this.update = function(percentage){
 		for(var i = 0; i < this.crossedQueue.length; i++){
 			var car = this.crossedQueue[i];
-			car.setDistFromOrigin((this.segmentSize * car.outSegment 
-			- this.crossroadRadius - (this.pivotDist - this.crossroadRadius) 
-			+ this.segmentSize * percentage) * -1);
+			if(car.turnDir==TURN_DIR.STRAIGHT){
+				car.setDistFromOrigin((this.segmentSize * car.outSegment 
+					+ this.crossroadRadius+2 
+					+ this.segmentSize * percentage) * -1);
+			}else{
+				car.setDistFromOrigin((this.segmentSize * car.outSegment 
+				- this.crossroadRadius - (this.pivotDist - this.crossroadRadius) 
+				+ this.segmentSize * percentage) * -1);
+			}
 		}
 	}
 	
