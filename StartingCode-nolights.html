@@ -46,6 +46,7 @@
 		var crossroadRadius = 7;
 		var roadLength = 67;
 		var segmentSize = 6;
+		var xAlbero, zAlbero;
 		var scene, camera, renderer, controls, stats;
 		var crossroad, nord, sud, est, ovest;
 		var gui;
@@ -127,25 +128,59 @@
 			scene.add(est.mainParent);
 			scene.add(nord.mainParent);
 			scene.add(ovest.mainParent);
-
-			Albero1= new Albero(11,11);
-			Albero2= new Albero(15,-11);
-			Albero3= new Albero(11,20);
-			Albero4= new Albero(-13,10);
-			Pino1=new Pino(-13,-10)
-			Pino2=new Pino(14,-14)
-			scene.add(Albero1.Tronco);
-			scene.add(Albero2.Tronco);
-			scene.add(Albero3.Tronco);
-			scene.add(Albero4.Tronco);
-			scene.add(Pino1.Tronco);
-			scene.add(Pino2.Tronco);
-			Pino1=new Pino(-13,-10);
-			Pino2=new Pino(14,-14);
 			
 			carQueue.endTick(1);
 			carQueue.startTick(1);
 			lastTickTime = Date.now();
+
+			for(var i=0; i<20; i++){
+				xAlbero= crossroadRadius *1.5 +( Math.round( Math.random()* (roadLength- 2*crossroadRadius)));
+				zAlbero= crossroadRadius *1.5 +( Math.round( Math.random()* (roadLength- 2*crossroadRadius)));
+				var x = Math.round(Math.random() *3 );
+				switch(x){
+
+					case 0:
+						if(Math.round(Math.random() )==0 ) {
+							Albero1= new Albero(xAlbero,zAlbero);
+							scene.add(Albero1.Tronco);		
+						}else{
+							Pino1=new Pino(xAlbero,zAlbero);
+							scene.add(Pino1.Tronco);
+						}
+					break
+					case 1:
+						xAlbero*= -1;
+						if(Math.round(Math.random() )==0 ) {
+							Albero1= new Albero(xAlbero,zAlbero);
+							scene.add(Albero1.Tronco);		
+						}else{
+							Pino1=new Pino(xAlbero,zAlbero);
+							scene.add(Pino1.Tronco);
+						}
+					break
+					case 2:
+						zAlbero*= -1;
+						if(Math.round(Math.random() )==0 ) {
+							Albero1= new Albero(xAlbero,zAlbero);
+							scene.add(Albero1.Tronco);		
+						}else{
+							Pino1=new Pino(xAlbero,zAlbero);
+							scene.add(Pino1.Tronco);
+						}
+					break
+					case 3:
+						xAlbero*= -1;
+						zAlbero*= -1;
+						if(Math.round(Math.random() )==0 ) {
+							Albero1= new Albero(xAlbero,zAlbero);
+							scene.add(Albero1.Tronco);		
+						}else{
+							Pino1=new Pino(xAlbero,zAlbero);
+							scene.add(Pino1.Tronco);
+						}
+					break
+				}
+			}
 		}
 
 		function Update() {
