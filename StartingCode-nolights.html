@@ -26,33 +26,32 @@
 		<script src="lib/dat.gui.min.js"></script>
 		<script src="Albero.js"></script>
 		<script src="Pino.js"></script>
+		<script src="Car_Queue.js"></script>
 	</head>
 	<body>
 		
 		<script>
+		// COLORS;
+		BLUE = 0x0000ff;
+		SEMAPHORE_GREY = 0xcccccc;
+		BLACK = 0x000000;
+		
 		RAD_TO_DEG_COEFF = Math.PI/180;
 		ANGLE_90 = 90 * RAD_TO_DEG_COEFF;
 		ANGLE_180 = 180 * RAD_TO_DEG_COEFF;
 		ANGLE_270 = 270 * RAD_TO_DEG_COEFF;
+		
+		TICK_TIME = 3500;
 
 		var crossroadRadius = 7;
-		var roadLength = 27;
+		var roadLength = 67;
+		var segmentSize = 6;
 		var scene, camera, renderer, controls, stats;
-		var crossroad, nord, sud, est, ovest, Mac, Mac2, Mac3;
+		var crossroad, nord, sud, est, ovest;
 		var gui;
-		var dummyNE = new THREE.Object3D();
-		dummyNE.position.x =9;
-		dummyNE.position.z =-9;
-		var dummyNW = new THREE.Object3D();
-		dummyNW.position.x =-9;
-		dummyNW.position.z =-9;
-		var dummySE = new THREE.Object3D();
-		dummySE.position.x =9;
-		dummySE.position.z =9;
-		var dummySW = new THREE.Object3D();
-		dummySW.position.x =-9;
-		dummySW.position.z =9;
 
+		var lastTickTime;
+		var carQueue, outQueue;
 
 
 		var options = {
@@ -107,39 +106,27 @@
 			gui.add(options, 'VerdeSuZ');
 			gui.add(options, 'VerdeSuX');
 			camera.position.z = 20;
+			carQueue = new CarQueue(roadLength, segmentSize, crossroadRadius,
+				PIVOT_DIST, scene, STREETS.EAST);
+			outQueue = new OutQueue(roadLength, segmentSize, crossroadRadius,
+				PIVOT_DIST, scene);
 			
 			crossroad = new CrossroadStreet(crossroadRadius, roadLength);
 			sud = new trafficLight(crossroadRadius, crossroadRadius, 0);
 			est = new trafficLight(crossroadRadius, -crossroadRadius, ANGLE_90);
 			nord = new trafficLight(-crossroadRadius, -crossroadRadius, ANGLE_180);
 			ovest = new trafficLight(-crossroadRadius, crossroadRadius, ANGLE_270);
-			Mac = new Car();
-			Mac2 = new Car();
-			Mac3 = new Car();
 			
 			sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			Mac.Corpo.position.x = 4;
-			Mac.Corpo.position.z = 35;
-			Mac2.Corpo.position.z = 20;
-			Mac2.Corpo.position.x = 13;
-			Mac3.Corpo.rotation.y = ANGLE_90;
-			Mac3.Corpo.position.z = 12;
-			Mac3.Corpo.position.x = -12;
 			
 			scene.add(crossroad.mainParent);
 			scene.add(sud.mainParent);
 			scene.add(est.mainParent);
 			scene.add(nord.mainParent);
 			scene.add(ovest.mainParent);
-			dummySW.add( Mac2.Corpo );
-			dummyNW.add(Mac3.Corpo);
-			scene.add( dummyNE );
-			scene.add( dummyNW );
-			scene.add( dummySE );
-			scene.add( dummySW );
 
 			Albero1= new Albero(11,11);
 			Albero2= new Albero(15,-11);
@@ -153,15 +140,37 @@
 			scene.add(Albero4.Tronco);
 			scene.add(Pino1.Tronco);
 			scene.add(Pino2.Tronco);
+			Pino1=new Pino(-13,-10);
+			Pino2=new Pino(14,-14);
+			
+			carQueue.endTick(1);
+			carQueue.startTick(1);
+			lastTickTime = Date.now();
 		}
 
 		function Update() {
 			requestAnimationFrame( Update );
-			Mac.fullMove('N', sud.stato);
-			Mac2.PercorsoStoW(dummySW, sud.stato);
-			Mac3.PercorsoWtoN(dummyNW, ovest.stato);
 			controls.update();  
 			stats.update();
+			
+			var timeNow = Date.now();
+			var passedTime = timeNow - lastTickTime;
+			if(passedTime > TICK_TIME){
+				carQueue.update(1);
+				outQueue.update(1);
+				var crossedCar = carQueue.endTick(0.5);
+				outQueue.endTick();
+				if(crossedCar != 0){
+					outQueue.add(crossedCar);
+				}
+				carQueue.startTick(true);
+				carQueue.update((TICK_TIME - passedTime)/TICK_TIME);
+				outQueue.update((TICK_TIME - passedTime)/TICK_TIME);
+				lastTickTime = timeNow;
+			} else {
+				carQueue.update(passedTime/TICK_TIME);
+				outQueue.update(passedTime/TICK_TIME);
+			}
 			Render();
 		}
 		

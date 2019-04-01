@@ -2,9 +2,6 @@ TRAFFIC_LIGHT_STATES = {GREEN: {VAL: 1, COLOR_ON: 0x00ff00, COLOR_OFF: 0x005500}
 	YELLOW: {VAL: 2, COLOR_ON: 0xffff00, COLOR_OFF: 0x555500},
 	RED: {VAL: 3, COLOR_ON: 0xff0000, COLOR_OFF: 0x550000}};
 	
-SEMAPHORE_GREY = 0xcccccc;
-BLACK = 0x000000;
-	
 function trafficLight(posX, posZ, rotY){
 	var stato;
 	var mainMaterial = new THREE.MeshBasicMaterial({ color: SEMAPHORE_GREY});
