@@ -205,6 +205,12 @@
 			requestAnimationFrame( Update );
 			controls.update();  
 			stats.update();
+			var LiberoSouth=false;
+			var LiberoNorth=false;
+			var LiberoEast=false;
+			var LiberoWest=false;
+
+
 			var timeNow=Date.now();
 			var passedTime = timeNow - lastTickTime;
 			if(passedTime > TICK_TIME){
@@ -231,20 +237,47 @@
 					outQueue.add(crossedCar4);
 				}
 
+				//se uno va a Sx e l' altro no quello che va a Sx si ferma 
+
+
+				if(   sud.stato!='G' || carSouthQueue.getHead()!=0 && (carSouthQueue.getHead().turnDir==TURN_DIR.LEFT && carNorthQueue.getHead().turnDir!=TURN_DIR.LEFT)){
+					LiberoSouth= false;
+				}else{
+					LiberoSouth= true ;
+				}
+
+				if(nord.stato!='G' || carNorthQueue.getHead()!=0 &&  (carNorthQueue.getHead().turnDir==TURN_DIR.LEFT && carSouthQueue.getHead().turnDir!=TURN_DIR.LEFT)){
+					LiberoNorth= false;
+				}else{
+					LiberoNorth= true ;
+				}
+
+				if(est.stato!='G' || carEastQueue.getHead()!=0 &&  (carEastQueue.getHead().turnDir==TURN_DIR.LEFT && carWestQueue.getHead().turnDir!=TURN_DIR.LEFT)){
+					LiberoEast= false;
+				}else{
+					LiberoEast= true ;
+				}
+
+				if(ovest.stato!='G' || carWestQueue.getHead()!=0 && (carWestQueue.getHead().turnDir==TURN_DIR.LEFT && carEastQueue.getHead().turnDir!=TURN_DIR.LEFT) ){
+					LiberoWest= false;
+				}else{
+					LiberoWest= true ;
+				}
+
 				
-				carEastQueue.startTick(true);
+				carEastQueue.startTick(LiberoEast);
 				carEastQueue.update((TICK_TIME - passedTime)/TICK_TIME);
 
 				
-				carSouthQueue.startTick(true);
+				carSouthQueue.startTick(LiberoSouth);
 				carSouthQueue.update((TICK_TIME - passedTime)/TICK_TIME);
 
 			
-				carWestQueue.startTick(true);
+				carWestQueue.startTick(LiberoWest);
 				carWestQueue.update((TICK_TIME - passedTime)/TICK_TIME);
 
 			
-				carNorthQueue.startTick(true);
+				carNorthQueue.startTick(LiberoNorth);
 				carNorthQueue.update((TICK_TIME - passedTime)/TICK_TIME);
 
 				outQueue.update((TICK_TIME - passedTime)/TICK_TIME);
