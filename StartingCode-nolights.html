@@ -26,6 +26,7 @@
 		<script src="lib/dat.gui.min.js"></script>
 		<script src="Albero.js"></script>
 		<script src="Pino.js"></script>
+		<script src="Car_Queue.js"></script>
 	</head>
 	<body>
 		
@@ -34,28 +35,24 @@
 		ANGLE_90 = 90 * RAD_TO_DEG_COEFF;
 		ANGLE_180 = 180 * RAD_TO_DEG_COEFF;
 		ANGLE_270 = 270 * RAD_TO_DEG_COEFF;
+		
+		TICK_TIME = 3500;
 
 		var crossroadRadius = 7;
-		var roadLength = 27;
+		var roadLength = 67;
+		var segmentSize = 6;
 		var scene, camera, renderer, controls, stats;
-		var crossroad, nord, sud, est, ovest, Mac, Mac2, Mac3;
-		var gui;
-		var dummyNE = new THREE.Object3D();
-		dummyNE.position.x =9;
-		dummyNE.position.z =-9;
-		var dummyNW = new THREE.Object3D();
-		dummyNW.position.x =-9;
-		dummyNW.position.z =-9;
-		var dummySE = new THREE.Object3D();
-		dummySE.position.x =9;
-		dummySE.position.z =9;
-		var dummySW = new THREE.Object3D();
-		dummySW.position.x =-9;
-		dummySW.position.z =9;
-
+		var crossroad, nord, sud, est, ovest;
+		var gui, spawn;
+		var lastTick;
+		var carQueue, outQueue;
 
 
 		var options = {
+			spawnEast : 0.1,
+			spawnWest : 0.1,
+			spawnNorth : 0.1,
+			spawnSouth : 0.1,
 			VerdeSuZ: function() {
 				if(est.stato=='G'){
 					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
@@ -63,7 +60,8 @@
 					
 					setTimeout(function(){
 						est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-					ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+						ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+
 						sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 						nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 					}, 3500)
@@ -73,7 +71,7 @@
 				if(sud.stato=='G'){
 					est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 					ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-
+					
 					setTimeout(function(){
 						sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 						nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
@@ -82,6 +80,9 @@
 					}, 3500)
 				}
 			},
+			
+
+			
 	};
 
 	function Start() {
@@ -106,40 +107,33 @@
 			gui = new dat.GUI();
 			gui.add(options, 'VerdeSuZ');
 			gui.add(options, 'VerdeSuX');
+			gui.add(options, 'spawnSouth' ,0 ,0.3 ,0.01).name("spawnrateSouth");
+			gui.add(options, 'spawnEast' ,0 ,0.3 ,0.01).name("spawnrateEast");
+			gui.add(options, 'spawnNorth' ,0 ,0.3 ,0.01).name("spawnrateNorth");
+			gui.add(options, 'spawnWest' ,0 ,0.3 ,0.01).name("spawnrateWest");
 			camera.position.z = 20;
+			carEastQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, scene, STREETS.EAST);
+			carSouthQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, scene, STREETS.SOUTH);
+			carWestQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, scene, STREETS.WEST);
+			carNorthQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, scene, STREETS.NORTH);
+			outQueue = new OutQueue(roadLength, segmentSize, crossroadRadius, scene);
 			
 			crossroad = new CrossroadStreet(crossroadRadius, roadLength);
 			sud = new trafficLight(crossroadRadius, crossroadRadius, 0);
 			est = new trafficLight(crossroadRadius, -crossroadRadius, ANGLE_90);
 			nord = new trafficLight(-crossroadRadius, -crossroadRadius, ANGLE_180);
 			ovest = new trafficLight(-crossroadRadius, crossroadRadius, ANGLE_270);
-			Mac = new Car();
-			Mac2 = new Car();
-			Mac3 = new Car();
 			
 			sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			Mac.Corpo.position.x = 4;
-			Mac.Corpo.position.z = 35;
-			Mac2.Corpo.position.z = 20;
-			Mac2.Corpo.position.x = 13;
-			Mac3.Corpo.rotation.y = ANGLE_90;
-			Mac3.Corpo.position.z = 12;
-			Mac3.Corpo.position.x = -12;
 			
 			scene.add(crossroad.mainParent);
 			scene.add(sud.mainParent);
 			scene.add(est.mainParent);
 			scene.add(nord.mainParent);
 			scene.add(ovest.mainParent);
-			dummySW.add( Mac2.Corpo );
-			dummyNW.add(Mac3.Corpo);
-			scene.add( dummyNE );
-			scene.add( dummyNW );
-			scene.add( dummySE );
-			scene.add( dummySW );
 
 			Albero1= new Albero(11,11);
 			Albero2= new Albero(15,-11);
@@ -153,15 +147,79 @@
 			scene.add(Albero4.Tronco);
 			scene.add(Pino1.Tronco);
 			scene.add(Pino2.Tronco);
+			Pino1=new Pino(-13,-10);
+			Pino2=new Pino(14,-14);
+			
+			carEastQueue.endTick(1);
+			carEastQueue.startTick(0);
+			carSouthQueue.endTick(1);
+			carSouthQueue.startTick(0);
+			carWestQueue.endTick(1);
+			carWestQueue.startTick(0);
+			carNorthQueue.endTick(1);
+			carNorthQueue.startTick(0);
+			lastTick = Date.now();
 		}
 
 		function Update() {
 			requestAnimationFrame( Update );
-			Mac.fullMove('N', sud.stato);
-			Mac2.PercorsoStoW(dummySW, sud.stato);
-			Mac3.PercorsoWtoN(dummyNW, ovest.stato);
 			controls.update();  
 			stats.update();
+			
+			var t = Date.now();
+			var passed = t - lastTick;
+			if(passed > TICK_TIME){
+				carEastQueue.update(1);
+				carSouthQueue.update(1);
+				carWestQueue.update(1);
+				carNorthQueue.update(1);
+				outQueue.update(1);
+				var exit1 = carEastQueue.endTick(options.spawnEast);
+				var exit2 = carSouthQueue.endTick(options.spawnSouth);
+				var exit3 = carWestQueue.endTick(options.spawnWest);
+				var exit4 = carNorthQueue.endTick(options.spawnNorth);
+				outQueue.endTick();
+				if(exit1 != 0){
+					outQueue.add(exit1);
+				}
+				if(exit2 != 0){
+					outQueue.add(exit2);
+				}
+				if(exit3 != 0){
+					outQueue.add(exit3);
+				}
+				if(exit4 != 0){
+					outQueue.add(exit4);
+				}
+
+				
+				carEastQueue.startTick(true);
+				
+				carEastQueue.update((TICK_TIME - passed)/TICK_TIME);
+
+				
+					carSouthQueue.startTick(true);
+				
+				carSouthQueue.update((TICK_TIME - passed)/TICK_TIME);
+
+			
+					carWestQueue.startTick(true);
+				
+				carWestQueue.update((TICK_TIME - passed)/TICK_TIME);
+
+			
+					carNorthQueue.startTick(true);
+				
+				carNorthQueue.update((TICK_TIME - passed)/TICK_TIME);
+				outQueue.update((TICK_TIME - passed)/TICK_TIME);
+				lastTick = t;
+			} else {
+				carEastQueue.update(passed/TICK_TIME);
+				carSouthQueue.update(passed/TICK_TIME);
+				carWestQueue.update(passed/TICK_TIME);
+				carNorthQueue.update(passed/TICK_TIME);
+				outQueue.update(passed/TICK_TIME);
+			}
 			Render();
 		}
 		
