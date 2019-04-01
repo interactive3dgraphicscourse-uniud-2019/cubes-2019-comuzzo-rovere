@@ -33,7 +33,17 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 				} else if(i == this.segmentNumber - 1 && Math.random() < spawnProb){
 					var spawnedCar = new Car(this.street, Math.floor(Math.random() * 3));
 					spawnedCar.setDistFromOrigin(this.segmentSize * this.segmentNumber + (this.pivotDist - this.crossroadRadius));
-					spawnedCar.setDistRightFromOrigin(3.5);
+					switch(spawnedCar.turnDir){
+						case TURN_DIR.LEFT:
+							spawnedCar.setDistRightFromOrigin(2);
+							break;
+						case TURN_DIR.STRAIGHT:
+							spawnedCar.setDistRightFromOrigin(3.5);
+							break;
+						case TURN_DIR.RIGHT:
+							spawnedCar.setDistRightFromOrigin(4.5);
+							break;
+					}
 
 					if(this.street == STREETS.EAST || this.street == STREETS.WEST){
 						spawnedCar.mainParent.rotation.y = ANGLE_90;
@@ -72,7 +82,12 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 		var head = this.queue[0];
 		if(head != 0 && head.isMoving){
 			switch(head.turnDir){
-				case TURN_DIR.STRAIGHT: // TODO
+				case TURN_DIR.STRAIGHT:
+					if(percentage < 0.5){
+						head.setDistFromOrigin((0.5 - percentage) * 2 * (this.crossroadRadius + 2));
+					} else {
+						head.setDistFromOrigin((percentage - 0.5) * 2 * (this.crossroadRadius + 2) * -1);
+					}
 				break;
 				case TURN_DIR.LEFT:
 					head.pivot.rotation.y = ANGLE_90 * percentage;
@@ -103,6 +118,7 @@ function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
 	this.pivotDist = pivotDist;
 	this.crossedQueue = [];
 	this.scene = scene;
+	this.crossingLength = crossroadRadius + (pivotDist - crossroadRadius);
 	
 	this.add = function(car){
 		car.outSegment = 0;
@@ -112,9 +128,13 @@ function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
 	this.update = function(percentage){
 		for(var i = 0; i < this.crossedQueue.length; i++){
 			var car = this.crossedQueue[i];
-			car.setDistFromOrigin((this.segmentSize * car.outSegment 
-			- this.crossroadRadius - (this.pivotDist - this.crossroadRadius) 
-			+ this.segmentSize * percentage) * -1);
+			if(car.turnDir == TURN_DIR.STRAIGHT){
+				car.setDistFromOrigin((this.segmentSize * car.outSegment 
+					+ this.crossingLength + this.segmentSize * percentage) * -1);
+			} else {
+				car.setDistFromOrigin((this.segmentSize * car.outSegment 
+					- this.crossingLength + this.segmentSize * percentage) * -1);
+			}
 		}
 	}
 	
