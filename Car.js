@@ -1,7 +1,6 @@
 STREETS = {NORTH: 0, EAST: 1, SOUTH: 2, WEST: 3};
 TURN_DIR = {LEFT: 0, STRAIGHT: 1, RIGHT: 2};
 PIVOT_DIST = 9;
-BLUE = 0x0000ff;
 
 function Car(street, turn){
 	this.street = street;
@@ -46,7 +45,6 @@ function Car(street, turn){
 				break;
 		}
 	}
-
 	var mainMaterial = new THREE.MeshBasicMaterial({color: BLUE});
     this.carBody = new THREE.Mesh(new THREE.BoxGeometry(2,1,4), mainMaterial);
     this.carBody.position.y = 1;
@@ -54,12 +52,14 @@ function Car(street, turn){
     this.cockpit.position.y=0.7;
     var blackMaterial = new THREE.MeshBasicMaterial({color:BLACK});
     var wheel = new THREE.BoxGeometry(0.5,0.8,0.8);
-    this.wheelBL=new THREE.Mesh( wheel, blackMaterial);
-    this.wheelBR=new THREE.Mesh( wheel, blackMaterial);
-    this.wheelFL=new THREE.Mesh( wheel, blackMaterial);
-    this.wheelFR=new THREE.Mesh( wheel, blackMaterial);
+    this.wheelBL = new THREE.Mesh( wheel, blackMaterial);
+    this.wheelBR = new THREE.Mesh( wheel, blackMaterial);
+    this.wheelFL = new THREE.Mesh( wheel, blackMaterial);
+    this.wheelFR = new THREE.Mesh( wheel, blackMaterial);
 	
+	// for Queues
 	this.isMoving = false;
+	this.outSegment = 0;
 	this.mainParent = this.carBody;
 	
 	this.setDistFromOrigin = function(dist){
@@ -79,7 +79,6 @@ function Car(street, turn){
 		}
 	}
 	
-	
 	this.setDistRightFromOrigin = function(dist){
 		switch(this.street){
 			case STREETS.NORTH:
@@ -96,7 +95,6 @@ function Car(street, turn){
 				break;
 		}
 	}
-	
     this.carBody.add(this.cockpit);
     this.carBody.add(this.wheelFL);
     this.carBody.add(this.wheelBL);

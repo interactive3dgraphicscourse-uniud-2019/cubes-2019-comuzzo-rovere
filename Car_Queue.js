@@ -1,7 +1,11 @@
-function CarQueue(roadLength, segmentSize, crossroadRadius, scene, street){
+
+
+function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, street){
 	this.segmentNumber = Math.floor(roadLength/segmentSize);
 	this.segmentSize = segmentSize;
 	this.crossroadRadius = crossroadRadius;
+	this.pivotDist = pivotDist;
+
 	this.scene = scene;
 	this.street = street;
 	this.queue = [];
@@ -9,30 +13,28 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, scene, street){
 		this.queue[i] = 0;
 	}
 
-
+	
 	this.endTick = function(spawnProb){
-		
+		var crossedCar = 0;
 		var head = this.queue[0];
-		
-		if(head != 0 && head.isMoving ){
+		if(head != 0 && head.isMoving){
+			crossedCar = head;
 			this.queue[0] = 0;
 		}
-		
 		for(var i = 1; i < this.segmentNumber; i++){
-			var previous = this.queue[i-1];
-			if(previous === 0){
-				var current = this.queue[i];
-				if(current !== 0){
-				current.setDistFromOrigin(this.segmentSize * (i-1) + this.crossroadRadius + 2);
-				current.isMoving = false;
-				this.queue[i-1] = current;
-				this.queue[i] = 0;
+			var prev = this.queue[i-1];
+			if(prev == 0){
+				var curr = this.queue[i];
+				if(curr != 0){
+					curr.setDistFromOrigin(this.segmentSize * (i-1) + this.crossroadRadius + (this.pivotDist - this.crossroadRadius));
+					curr.isMoving = false;
+					this.queue[i-1] = curr;
+					this.queue[i] = 0;
 				} else if(i == this.segmentNumber - 1 && Math.random() < spawnProb){
 					var spawnedCar = new Car(this.street, Math.floor(Math.random() * 3));
-					spawnedCar.setDistFromOrigin(this.segmentSize * this.segmentNumber + 2);
+					spawnedCar.setDistFromOrigin(this.segmentSize * this.segmentNumber + (this.pivotDist - this.crossroadRadius));
 					spawnedCar.setDistRightFromOrigin(3.5);
-					spawnedCar.posX = spawnedCar.mainParent.position.x;
-					spawnedCar.posZ = spawnedCar.mainParent.position.z;
+
 					if(this.street == STREETS.EAST || this.street == STREETS.WEST){
 						spawnedCar.mainParent.rotation.y = ANGLE_90;
 					}
@@ -41,9 +43,8 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, scene, street){
 				}
 			}
 		}
-		if(this.canGo){
-		return head;
-		}else{return 0;}
+
+		return crossedCar;
 	}
 
 	
@@ -55,7 +56,8 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, scene, street){
 			}
 		}
 
-			for(var i = 1; i < this.segmentNumber; i++){
+		for(var i = 1; i < this.segmentNumber; i++){
+
 				var prev = this.queue[i-1];
 				var curr = this.queue[i];
 				if(curr != 0){
@@ -63,68 +65,62 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, scene, street){
 					this.queue[i].isMoving = true;
 					}
 				}
-			}
-		
+		}
 	}
 	
-	this.update = function(perc){
-		
-			var head = this.queue[0];
-			if(head != 0 && head.isMoving){
-				switch(head.turnDir){
-				case TURN_DIR.STRAIGHT:
-					head.setDistFromOrigin(( this.crossroadRadius - this.segmentSize * perc) + 2);	
+	this.update = function(percentage){
+		var head = this.queue[0];
+		if(head != 0 && head.isMoving){
+			switch(head.turnDir){
+				case TURN_DIR.STRAIGHT: // TODO
 				break;
 				case TURN_DIR.LEFT:
-						head.pivot.rotation.y = ANGLE_90 * perc;
+					head.pivot.rotation.y = ANGLE_90 * percentage;
 				break;
 				case TURN_DIR.RIGHT:
-						head.pivot.rotation.y = ANGLE_90 * -perc;
+					head.pivot.rotation.y = -ANGLE_90 * percentage;
 				break;
 			}
 		}
-		
 		for(var i = 1; i < this.segmentNumber; i++){
-			if(this.queue[i] !== 0){
-				var car = this.queue[i];
-				if(car.isMoving){
-					car.setDistFromOrigin((this.segmentSize * (i) + this.crossroadRadius - this.segmentSize * perc) + 2);
-				}	
+			var car = this.queue[i];
+			if(car != 0 && car.isMoving){
+				car.setDistFromOrigin((this.segmentSize * (i) + this.crossroadRadius
+				- this.segmentSize * percentage) + (this.pivotDist - this.crossroadRadius));
 			}
 		}
 	}
-
+	
 	this.getHead = function(){
 		return this.queue[0];
 	}
+} // CarQueue
 
-}
-
-function OutQueue(roadLength, segmentSize, crossroadRadius, scene){
+function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
 	this.segmentNumber = Math.floor(roadLength/segmentSize);
 	this.segmentSize = segmentSize;
 	this.crossroadRadius = crossroadRadius;
+	this.pivotDist = pivotDist;
 	this.crossedQueue = [];
 	this.scene = scene;
 	
 	this.add = function(car){
 		car.outSegment = 0;
-		if(car.turnDir==TURN_DIR.STRAIGHT){
-			car.outSegment = 1;
-		}
-		
 		this.crossedQueue.push(car);
 	}
 	
-	this.update = function(perc){
+	this.update = function(percentage){
 		for(var i = 0; i < this.crossedQueue.length; i++){
 			var car = this.crossedQueue[i];
-			car.setDistFromOrigin((this.segmentSize * car.outSegment - this.crossroadRadius - 2 + this.segmentSize * perc) * -1);
+			car.setDistFromOrigin((this.segmentSize * car.outSegment 
+			- this.crossroadRadius - (this.pivotDist - this.crossroadRadius) 
+			+ this.segmentSize * percentage) * -1);
 		}
 	}
 	
 	this.endTick = function(){
-		while(this.crossedQueue.length > 0 && this.crossedQueue[0].outSegment == this.segmentNumber){
+		while(this.crossedQueue.length > 0 && this.crossedQueue[0].outSegment 
+				== this.segmentNumber){
 			var car = this.crossedQueue.shift();
 			this.scene.remove(car.pivot);
 		}
@@ -132,5 +128,4 @@ function OutQueue(roadLength, segmentSize, crossroadRadius, scene){
 			this.crossedQueue[i].outSegment += 1;
 		}
 	}
-	
-}
+} // OutQueue
