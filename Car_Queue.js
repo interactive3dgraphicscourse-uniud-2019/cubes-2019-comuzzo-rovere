@@ -141,7 +141,7 @@ function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
 	
 	this.endTick = function(){
 		while(this.crossedQueue.length > 0 && this.crossedQueue[0].outSegment 
-				== this.segmentNumber){
+				== this.segmentNumber -2){
 			var car = this.crossedQueue.shift();
 			this.scene.remove(car.pivot);
 		}

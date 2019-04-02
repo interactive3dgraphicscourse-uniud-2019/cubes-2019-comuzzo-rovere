@@ -4,6 +4,19 @@ PIVOT_DIST = 9;
 
 function Car(street, turn){
 	this.street = street;
+	
+	var pro= Math.random();
+	if (pro<=0.3){
+		this.colore= ROSSO_MESH;
+	}else if(pro>=0.7){
+		this.colore= VERDE_CHIARO_MESH ;
+	}else{
+		this.colore= BLU_MESH;
+	}
+
+
+
+
 	this.turnDir = turn;
 	this.pivot = new THREE.Object3D();
 	if(turn == TURN_DIR.LEFT){
@@ -45,17 +58,29 @@ function Car(street, turn){
 				break;
 		}
 	}
-	var mainMaterial = new THREE.MeshBasicMaterial({color: BLUE});
-    this.carBody = new THREE.Mesh(new THREE.BoxGeometry(2,1,4), mainMaterial);
-    this.carBody.position.y = 1;
-    this.cockpit = new THREE.Mesh(new THREE.BoxGeometry(1,0.7,3), mainMaterial);
+	
+    this.carBody = new THREE.Mesh(box , this.colore);
+	this.carBody.position.y = 1;
+	this.carBody.scale.x = 2;
+	this.carBody.scale.z = 4;
+
+	this.cockpit = new THREE.Mesh(box, this.colore);
+	this.cockpit.scale.y=0.7;
+	this.cockpit.scale.z=0.75
+	this.cockpit.scale.x=0.5
     this.cockpit.position.y=0.7;
-    var blackMaterial = new THREE.MeshBasicMaterial({color:BLACK});
-    var wheel = new THREE.BoxGeometry(0.5,0.8,0.8);
-    this.wheelBL = new THREE.Mesh( wheel, blackMaterial);
-    this.wheelBR = new THREE.Mesh( wheel, blackMaterial);
-    this.wheelFL = new THREE.Mesh( wheel, blackMaterial);
-    this.wheelFR = new THREE.Mesh( wheel, blackMaterial);
+	this.wheelBL = new THREE.Mesh( box, NERO_MESH);
+	this.wheelBL.scale.x=0.4;
+	this.wheelBL.scale.z=0.2;
+	this.wheelBR = new THREE.Mesh( box, NERO_MESH);
+	this.wheelBR.scale.x=0.4;
+	this.wheelBR.scale.z=0.2;
+	this.wheelFL = new THREE.Mesh( box, NERO_MESH);
+	this.wheelFL.scale.x=0.4;
+	this.wheelFL.scale.z=0.2;
+	this.wheelFR = new THREE.Mesh( box, NERO_MESH);
+	this.wheelFR.scale.x=0.4;
+	this.wheelFR.scale.z=0.2;
 	
 	// for Queues
 	this.isMoving = false;
@@ -103,17 +128,17 @@ function Car(street, turn){
 	
 	this.pivot.add(this.carBody);
 
-    this.wheelFL.position.x= -1;
-    this.wheelFL.position.z= -1;
+    this.wheelFL.position.x= -0.5;
+    this.wheelFL.position.z= -0.25;
     this.wheelFL.position.y=-0.75 ;
-    this.wheelBL.position.x= -1;
-    this.wheelBL.position.z= 1;
+    this.wheelBL.position.x= -0.5;
+    this.wheelBL.position.z= 0.25;
     this.wheelBL.position.y=-0.75 ;
-    this.wheelFR.position.x= 1;
-    this.wheelFR.position.z= -1;
+    this.wheelFR.position.x= 0.5;
+    this.wheelFR.position.z= -0.25;
     this.wheelFR.position.y=-0.75 ;
-    this.wheelBR.position.x= 1;
-    this.wheelBR.position.z= 1;
+    this.wheelBR.position.x= 0.5;
+    this.wheelBR.position.z= 0.25;
     this.wheelBR.position.y=-0.75 ;
 }
 
