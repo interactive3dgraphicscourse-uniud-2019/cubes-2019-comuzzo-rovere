@@ -1,17 +1,22 @@
 function CrossroadStreet(crossroadRadius, roadLength){
 	var laneLineMaterial = new THREE.LineBasicMaterial({color: 0xffffff, linewidth:10});
-	var strada = new THREE.BoxGeometry(crossroadRadius*2,0.1,crossroadRadius*2);
+	
 	var coloreStrada = new THREE.MeshBasicMaterial({color:0x111111});
 	var coloreMarciapiede = new THREE.MeshBasicMaterial({color:0x555555});
 	var coloreErba = new THREE.MeshBasicMaterial({color:0x35682d});
 	var lstrada = (roadLength - crossroadRadius ) ;
 	var l=(crossroadRadius + lstrada/2);
    
-	this.centrale = new THREE.Mesh( strada, coloreStrada);
-	
-	this.StradaSW = new THREE.Mesh( strada, coloreStrada);
-	this.StradaSW.scale.x = 0.495;
-	this.StradaSW.scale.z = lstrada/crossroadRadius/2;
+	this.centrale = new THREE.Mesh( box, coloreStrada);
+	this.centrale.scale.y=0.1;
+	this.centrale.scale.z=crossroadRadius*2;
+	this.centrale.scale.x=crossroadRadius*2;
+
+
+	this.StradaSW = new THREE.Mesh( box, coloreStrada);
+	this.StradaSW.scale.x = crossroadRadius *0.99;
+	this.StradaSW.scale.y = 0.1;
+	this.StradaSW.scale.z = lstrada;
 	this.StradaSW.position.x = - crossroadRadius /2;
 	this.StradaSW.position.z =l;
 	this.StradaSE=this.StradaSW.clone();
@@ -42,11 +47,11 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.StradaWS.position.z= crossroadRadius /2;
 	this.StradaWS.position.x= -l;
 
-	this.MarciaSW = new THREE.Mesh( strada, coloreMarciapiede);
+	this.MarciaSW = new THREE.Mesh( box, coloreMarciapiede);
 
-	this.MarciaSW.scale.x=0.2;
-	this.MarciaSW.scale.z=lstrada/crossroadRadius/2;
-	this.MarciaSW.scale.y=10;
+	this.MarciaSW.scale.x=crossroadRadius/2;
+	this.MarciaSW.scale.z=lstrada;
+	
 	this.MarciaSW.position.x=-(crossroadRadius + 1.4);
 	this.MarciaSW.position.z= l ;
 	this.MarciaSE=this.MarciaSW.clone();
@@ -79,20 +84,21 @@ function CrossroadStreet(crossroadRadius, roadLength){
 
 
 
-	this.ErbaSW = new THREE.Mesh( strada, coloreErba);
-	this.ErbaSW.scale.x = lstrada/crossroadRadius/2.01;
-	this.ErbaSW.scale.z = lstrada/crossroadRadius/2.01;
-	this.ErbaSW.position.x = -(crossroadRadius+ lstrada/2);
-	this.ErbaSW.position.z = (crossroadRadius+ lstrada/2);
+	this.ErbaSW = new THREE.Mesh( box, coloreErba);
+	this.ErbaSW.scale.x = lstrada - crossroadRadius/2;
+	this.ErbaSW.scale.z = lstrada - crossroadRadius/2;
+	this.ErbaSW.scale.y = 0.5;
+	this.ErbaSW.position.x = -(1.2*crossroadRadius+ lstrada/2);
+	this.ErbaSW.position.z = (1.2*crossroadRadius+ lstrada/2);
 	this.ErbaSE = this.ErbaSW.clone();
-	this.ErbaSW.position.x = (crossroadRadius+ lstrada/2);
-	this.ErbaSW.position.z = (crossroadRadius+ lstrada/2);
+	this.ErbaSW.position.x = (1.2*crossroadRadius+ lstrada/2);
+	this.ErbaSW.position.z = (1.2*crossroadRadius+ lstrada/2);
 	this.ErbaNE = this.ErbaSW.clone();
-	this.ErbaNE.position.x = (crossroadRadius+ lstrada/2);
-	this.ErbaNE.position.z = -(crossroadRadius+ lstrada/2);
+	this.ErbaNE.position.x = (1.2*crossroadRadius+ lstrada/2);
+	this.ErbaNE.position.z = -(1.2*crossroadRadius+ lstrada/2);
 	this.ErbaNW = this.ErbaSW.clone();
-	this.ErbaNW.position.x = -(crossroadRadius+ lstrada/2);
-	this.ErbaNW.position.z = -(crossroadRadius+ lstrada/2);
+	this.ErbaNW.position.x = -(1.2*crossroadRadius+ lstrada/2);
+	this.ErbaNW.position.z = -(1.2*crossroadRadius+ lstrada/2);
 
     
     var straightLine = new THREE.Geometry();
