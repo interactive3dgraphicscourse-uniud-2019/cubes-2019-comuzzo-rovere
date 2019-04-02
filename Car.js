@@ -5,15 +5,9 @@ PIVOT_DIST = 9;
 function Car(street, turn){
 	this.street = street;
 	
-	var pro= Math.random();
-	if (pro<=0.3){
-		this.colore= ROSSO_MESH;
-	}else if(pro>=0.7){
-		this.colore= VERDE_CHIARO_MESH ;
-	}else{
-		this.colore= BLU_MESH;
-	}
-
+	var pro= Math.floor(Math.random() * ELENCO_COLORI_MACCHINE.length);
+	this.colore= ELENCO_COLORI_MACCHINE[pro]
+	
 
 
 
