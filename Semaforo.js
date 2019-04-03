@@ -1,14 +1,18 @@
+
+
 TRAFFIC_LIGHT_STATES = {GREEN: {VAL: 1, COLOR_ON: 0x00ff00, COLOR_OFF: 0x005500},
 	YELLOW: {VAL: 2, COLOR_ON: 0xffff00, COLOR_OFF: 0x555500},
 	RED: {VAL: 3, COLOR_ON: 0xff0000, COLOR_OFF: 0x550000}};
 
 function trafficLight(posX, posZ, rotY){
 	var stato;
+	
 	this.poleVertical = new THREE.Mesh( box, GRIGIO_MESH);
 	this.poleVertical.scale.x=0.3;
 	this.poleVertical.scale.y=6;
 	this.poleVertical.scale.z=0.3;
 	this.poleVertical.position.y = 3;
+
 	this.poleHorizontal = new THREE.Mesh(box, GRIGIO_MESH);
 	this.poleHorizontal.scale.x=10;
 	this.poleHorizontal.scale.y=0.3/6;
@@ -17,7 +21,6 @@ function trafficLight(posX, posZ, rotY){
 
 	this.lightSupport = new THREE.Mesh(new THREE.BoxGeometry(1, 2.5, 1),
 		new THREE.MeshBasicMaterial({color: BLACK}));
-	
 	
 	
 	this.lightSupport.position.x= -1.5 * 0.3;

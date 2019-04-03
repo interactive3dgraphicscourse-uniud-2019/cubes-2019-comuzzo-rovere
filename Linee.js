@@ -1,5 +1,12 @@
+
+
+/*
+creates the scene:the crossroad, the sidewalk, the grass and the lines in the center of the streets
+crossroadRadius is the raius of the crossroad central square
+roadLength is the length of the street from the side of the central square
+*/
 function CrossroadStreet(crossroadRadius, roadLength){
-	var laneLineMaterial = new THREE.LineBasicMaterial({color: 0xffffff, linewidth:10});
+	var laneLineMaterial = new THREE.LineBasicMaterial({WHITE, linewidth:10});
 	
 	var coloreStrada = new THREE.MeshBasicMaterial({color:0x111111});
 	var coloreMarciapiede = new THREE.MeshBasicMaterial({color:0x555555});
@@ -7,12 +14,14 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	var lstrada = (roadLength - crossroadRadius ) ;
 	var l=(crossroadRadius + lstrada/2);
    
+	//creates the central square of the crossroad
 	this.centrale = new THREE.Mesh( box, coloreStrada);
 	this.centrale.scale.y=0.1;
 	this.centrale.scale.z=crossroadRadius*2;
 	this.centrale.scale.x=crossroadRadius*2;
 
 
+	//creates a road then clones it and moves and rotates it to draw all the streets
 	this.StradaSW = new THREE.Mesh( box, coloreStrada);
 	this.StradaSW.scale.x = crossroadRadius *0.99;
 	this.StradaSW.scale.y = 0.1;
@@ -47,11 +56,10 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.StradaWS.position.z= crossroadRadius /2;
 	this.StradaWS.position.x= -l;
 
+    //creates a 
 	this.MarciaSW = new THREE.Mesh( box, coloreMarciapiede);
-
 	this.MarciaSW.scale.x=crossroadRadius/2;
 	this.MarciaSW.scale.z=lstrada;
-	
 	this.MarciaSW.position.x=-(crossroadRadius + 1.4);
 	this.MarciaSW.position.z= l ;
 	this.MarciaSE=this.MarciaSW.clone();
@@ -83,7 +91,7 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.MarciaWS.position.x= -l;
 
 
-
+	//creates a square of grass and clones it and moves them to the four angles
 	this.ErbaSW = new THREE.Mesh( box, coloreErba);
 	this.ErbaSW.scale.x = lstrada - crossroadRadius/2;
 	this.ErbaSW.scale.z = lstrada - crossroadRadius/2;
@@ -100,7 +108,7 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.ErbaNW.position.x = -(1.2*crossroadRadius+ lstrada/2);
 	this.ErbaNW.position.z = -(1.2*crossroadRadius+ lstrada/2);
 
-    
+    //creates all the lines between in the middle of the streets
     var straightLine = new THREE.Geometry();
     straightLine.vertices.push(
         new THREE.Vector3(0,  0, crossroadRadius),
@@ -114,6 +122,7 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.laneDividerN.rotation.y = ANGLE_180;
 	this.laneDividerW.rotation.y = ANGLE_270;
 	
+	//adds every piece to a fictional object 
 	this.crossroadCenter = new THREE.Object3D();
 	this.crossroadCenter.position.y=-0.15;
 	this.crossroadCenter.add(this.laneDividerS);
