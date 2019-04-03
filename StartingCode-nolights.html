@@ -87,10 +87,10 @@
 			gui = new dat.GUI();
 			gui.add(options, 'VerdeSuZ');
 			gui.add(options, 'VerdeSuX');
-			gui.add(options, 'spawnSouth' ,0 ,0.3 ,0.01).name("spawnrateSouth");
-			gui.add(options, 'spawnEast' ,0 ,0.3 ,0.01).name("spawnrateEast");
-			gui.add(options, 'spawnNorth' ,0 ,0.3 ,0.01).name("spawnrateNorth");
-			gui.add(options, 'spawnWest' ,0 ,0.3 ,0.01).name("spawnrateWest");
+			gui.add(options, 'spawnSouth' ,0 ,0.8 ,0.01).name("spawnrateSouth");
+			gui.add(options, 'spawnEast' ,0 ,0.8 ,0.01).name("spawnrateEast");
+			gui.add(options, 'spawnNorth' ,0 ,0.8 ,0.01).name("spawnrateNorth");
+			gui.add(options, 'spawnWest' ,0 ,0.8 ,0.01).name("spawnrateWest");
 			camera.position.z = 20;
 			carEastQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.EAST);
 			carSouthQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.SOUTH);
@@ -211,42 +211,36 @@
 					outQueue.add(crossedCar4);
 				}
 				
-				if(wantNSGreen){
-					if(trafficLightStateNS == TRAFFIC_LIGHT_STATES.RED.VAL){
-						switch(trafficLightStateEW){
-							case TRAFFIC_LIGHT_STATES.GREEN.VAL:
-								trafficLightStateEW = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
-								est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-								ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-								break;
-							case TRAFFIC_LIGHT_STATES.YELLOW.VAL:
-								trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
-								trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
-								est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-								ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-								sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-								nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-								break;
-						}
-					}
-				} else {
-					if(trafficLightStateEW == TRAFFIC_LIGHT_STATES.RED.VAL){
-						switch(trafficLightStateNS){
-							case TRAFFIC_LIGHT_STATES.GREEN.VAL:
-								trafficLightStateNS = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
-								nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-								sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-								break;
-							case TRAFFIC_LIGHT_STATES.YELLOW.VAL:
-								trafficLightStateNS = TRAFFIC_LIGHT_STATES.RED.VAL;
-								trafficLightStateEW = TRAFFIC_LIGHT_STATES.GREEN.VAL;
-								nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-								sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-								est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-								ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-								break;
-						}
-					}
+				if(trafficLightStateEW == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
+					console.log(1);
+					trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
+					trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
+					est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+					nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+				} else if(trafficLightStateNS == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
+					console.log(2);
+					trafficLightStateNS = TRAFFIC_LIGHT_STATES.RED.VAL;
+					trafficLightStateEW = TRAFFIC_LIGHT_STATES.GREEN.VAL;
+					nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+					est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+					ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+				} else if(wantNSGreen &&
+							trafficLightStateNS == TRAFFIC_LIGHT_STATES.RED.VAL &&
+							trafficLightStateEW == TRAFFIC_LIGHT_STATES.GREEN.VAL){
+								console.log(3);
+					trafficLightStateEW = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
+					est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+					ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+				} else if(!wantNSGreen &&
+							trafficLightStateEW == TRAFFIC_LIGHT_STATES.RED.VAL &&
+							trafficLightStateNS == TRAFFIC_LIGHT_STATES.GREEN.VAL){
+								console.log(4);
+					trafficLightStateNS = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
+					nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 				}
 				
 				if(trafficLightStateNS != TRAFFIC_LIGHT_STATES.GREEN.VAL){
