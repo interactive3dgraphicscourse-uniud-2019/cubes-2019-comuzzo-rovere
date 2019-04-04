@@ -36,7 +36,7 @@
 		BLU_MESH = new THREE.MeshBasicMaterial({color: BLUE});
 		SEMAPHORE_GREY = 0xcccccc;
 		BLACK = 0x000000;
-		ELENCO_COLORI_MACCHINE=[
+		CARS_MESH=[
 			new THREE.MeshBasicMaterial({color:0xb3b3b3}),
 			new THREE.MeshBasicMaterial({color:0xbb0a30}),
 			new THREE.MeshBasicMaterial({color:0xb6b1a9}),
@@ -236,7 +236,6 @@
 				}
 				
 				if(trafficLightStateEW == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
-					console.log(1);
 					trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
 					trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
 					est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
@@ -244,7 +243,6 @@
 					sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 					nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 				} else if(trafficLightStateNS == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
-					console.log(2);
 					trafficLightStateNS = TRAFFIC_LIGHT_STATES.RED.VAL;
 					trafficLightStateEW = TRAFFIC_LIGHT_STATES.GREEN.VAL;
 					nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
@@ -254,14 +252,12 @@
 				} else if(wantNSGreen &&
 							trafficLightStateNS == TRAFFIC_LIGHT_STATES.RED.VAL &&
 							trafficLightStateEW == TRAFFIC_LIGHT_STATES.GREEN.VAL){
-								console.log(3);
 					trafficLightStateEW = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
 					est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 					ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 				} else if(!wantNSGreen &&
 							trafficLightStateEW == TRAFFIC_LIGHT_STATES.RED.VAL &&
 							trafficLightStateNS == TRAFFIC_LIGHT_STATES.GREEN.VAL){
-								console.log(4);
 					trafficLightStateNS = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
 					nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);

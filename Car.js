@@ -2,63 +2,62 @@ STREETS = {NORTH: 0, EAST: 1, SOUTH: 2, WEST: 3};
 TURN_DIR = {LEFT: 0, STRAIGHT: 1, RIGHT: 2};
 PIVOT_DIST = 9;
 
-function Car(street, turn){
+function Car(street, turn, mesh){
 	this.street = street;
-	
-	var pro= Math.floor(Math.random() * ELENCO_COLORI_MACCHINE.length);
-	this.colore= ELENCO_COLORI_MACCHINE[pro]
-	
-
-
-
 	this.turnDir = turn;
-	this.pivot = new THREE.Object3D();
-	if(turn == TURN_DIR.LEFT){
-		switch(street){
-			case STREETS.NORTH:
-				this.pivot.position.x = PIVOT_DIST;
-				this.pivot.position.z = -PIVOT_DIST;
+	this.mesh = mesh;
+	if(this.turnDir != TURN_DIR.STRAIGHT){
+		this.pivot = new THREE.Object3D();
+		switch(turn){
+			case TURN_DIR.LEFT:
+				switch(street){
+					case STREETS.NORTH:
+						this.pivot.position.x = PIVOT_DIST;
+						this.pivot.position.z = -PIVOT_DIST;
+						break;
+					case STREETS.SOUTH:
+						this.pivot.position.x = -PIVOT_DIST;
+						this.pivot.position.z = PIVOT_DIST;
+						break;
+					case STREETS.EAST:
+						this.pivot.position.x = PIVOT_DIST;
+						this.pivot.position.z = PIVOT_DIST;
+						break;
+					case STREETS.WEST:
+						this.pivot.position.x = -PIVOT_DIST;
+						this.pivot.position.z = -PIVOT_DIST;
+						break;
+				}
 				break;
-			case STREETS.SOUTH:
-				this.pivot.position.x = -PIVOT_DIST;
-				this.pivot.position.z = PIVOT_DIST;
-				break;
-			case STREETS.EAST:
-				this.pivot.position.x = PIVOT_DIST;
-				this.pivot.position.z = PIVOT_DIST;
-				break;
-			case STREETS.WEST:
-				this.pivot.position.x = -PIVOT_DIST;
-				this.pivot.position.z = -PIVOT_DIST;
-				break;
-		}
-	} else if(turn == TURN_DIR.RIGHT){
-		switch(street){
-			case STREETS.NORTH:
-				this.pivot.position.x = -PIVOT_DIST;
-				this.pivot.position.z = -PIVOT_DIST;
-				break;
-			case STREETS.SOUTH:
-				this.pivot.position.x = PIVOT_DIST;
-				this.pivot.position.z = PIVOT_DIST;
-				break;
-			case STREETS.EAST:
-				this.pivot.position.x = PIVOT_DIST;
-				this.pivot.position.z = -PIVOT_DIST;
-				break;
-			case STREETS.WEST:
-				this.pivot.position.x = -PIVOT_DIST;
-				this.pivot.position.z = PIVOT_DIST;
+			case TURN_DIR.RIGHT:
+				switch(street){
+					case STREETS.NORTH:
+						this.pivot.position.x = -PIVOT_DIST;
+						this.pivot.position.z = -PIVOT_DIST;
+						break;
+					case STREETS.SOUTH:
+						this.pivot.position.x = PIVOT_DIST;
+						this.pivot.position.z = PIVOT_DIST;
+						break;
+					case STREETS.EAST:
+						this.pivot.position.x = PIVOT_DIST;
+						this.pivot.position.z = -PIVOT_DIST;
+						break;
+					case STREETS.WEST:
+						this.pivot.position.x = -PIVOT_DIST;
+						this.pivot.position.z = PIVOT_DIST;
+						break;
+				}
 				break;
 		}
 	}
 	
-    this.carBody = new THREE.Mesh(box , this.colore);
+    this.carBody = new THREE.Mesh(box , this.mesh);
 	this.carBody.position.y = 1.1;
 	this.carBody.scale.x = 2;
 	this.carBody.scale.z = 4;
 
-	this.cockpit = new THREE.Mesh(box, this.colore);
+	this.cockpit = new THREE.Mesh(box, this.mesh);
 	this.cockpit.scale.y=0.7;
 	this.cockpit.scale.z=0.75
 	this.cockpit.scale.x=0.5
@@ -82,35 +81,47 @@ function Car(street, turn){
 	this.mainParent = this.carBody;
 	
 	this.setDistFromOrigin = function(dist){
+		var offsetX = 0;
+		var offsetZ = 0;
+		if(this.turnDir != TURN_DIR.STRAIGHT){
+			offsetX = this.pivot.position.x;
+			offsetZ = this.pivot.position.z;
+		}
 		switch(this.street){
 			case STREETS.NORTH:
-				this.mainParent.position.z = -dist - this.pivot.position.z;
+				this.mainParent.position.z = -dist - offsetZ;
 				break;
 			case STREETS.SOUTH:
-				this.mainParent.position.z = dist - this.pivot.position.z;
+				this.mainParent.position.z = dist - offsetZ;
 				break;
 			case STREETS.EAST:
-				this.mainParent.position.x = dist - this.pivot.position.x;
+				this.mainParent.position.x = dist - offsetX;
 				break;
 			case STREETS.WEST:
-				this.mainParent.position.x = -dist - this.pivot.position.x;
+				this.mainParent.position.x = -dist - offsetX;
 				break;
 		}
 	}
 	
 	this.setDistRightFromOrigin = function(dist){
+		var offsetX = 0;
+		var offsetZ = 0;
+		if(this.turnDir != TURN_DIR.STRAIGHT){
+			offsetX = this.pivot.position.x;
+			offsetZ = this.pivot.position.z;
+		}
 		switch(this.street){
 			case STREETS.NORTH:
-				this.mainParent.position.x = -dist - this.pivot.position.x;
+				this.mainParent.position.x = -dist - offsetX;
 				break;
 			case STREETS.SOUTH:
-				this.mainParent.position.x = dist - this.pivot.position.x;
+				this.mainParent.position.x = dist - offsetX;
 				break;
 			case STREETS.EAST:
-				this.mainParent.position.z = -dist - this.pivot.position.z;
+				this.mainParent.position.z = -dist - offsetZ;
 				break;
 			case STREETS.WEST:
-				this.mainParent.position.z = dist - this.pivot.position.z;
+				this.mainParent.position.z = dist - offsetZ;
 				break;
 		}
 	}
@@ -120,8 +131,10 @@ function Car(street, turn){
     this.carBody.add(this.wheelFR);
     this.carBody.add(this.wheelBR);
 	
-	this.pivot.add(this.carBody);
-
+	if(this.turnDir != TURN_DIR.STRAIGHT){
+		this.pivot.add(this.carBody);
+	}
+	
     this.wheelFL.position.x= -0.5;
     this.wheelFL.position.z= -0.25;
     this.wheelFL.position.y=-0.75 ;

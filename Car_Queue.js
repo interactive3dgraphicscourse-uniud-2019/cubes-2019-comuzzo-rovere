@@ -31,7 +31,8 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 					this.queue[i-1] = curr;
 					this.queue[i] = 0;
 				} else if(i == this.segmentNumber - 1 && Math.random() < spawnProb){
-					var spawnedCar = new Car(this.street, Math.floor(Math.random() * 3));
+					var spawnedCar = new Car(this.street, Math.floor(Math.random() * 3),
+								CARS_MESH[Math.floor(Math.random() * CARS_MESH.length)]);
 					spawnedCar.setDistFromOrigin(this.segmentSize * this.segmentNumber + (this.pivotDist - this.crossroadRadius));
 					switch(spawnedCar.turnDir){
 						case TURN_DIR.LEFT:
@@ -48,7 +49,11 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 					if(this.street == STREETS.EAST || this.street == STREETS.WEST){
 						spawnedCar.mainParent.rotation.y = ANGLE_90;
 					}
-					this.scene.add(spawnedCar.pivot);
+					if(spawnedCar.turnDir == TURN_DIR.STRAIGHT){
+						this.scene.add(spawnedCar.mainParent);
+					} else {
+						this.scene.add(spawnedCar.pivot);
+					}
 					this.queue[this.segmentNumber - 1] = spawnedCar;
 				}
 			}
@@ -143,7 +148,12 @@ function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
 		while(this.crossedQueue.length > 0 && this.crossedQueue[0].outSegment 
 				== this.segmentNumber -2){
 			var car = this.crossedQueue.shift();
-			this.scene.remove(car.pivot);
+			if(car.turnDir == TURN_DIR.STRAIGHT){
+				this.scene.remove(car.mainParent);
+			} else {
+				this.scene.remove(car.pivot);
+				
+			}
 		}
 		for(var i = 0; i < this.crossedQueue.length; i++){
 			this.crossedQueue[i].outSegment += 1;
