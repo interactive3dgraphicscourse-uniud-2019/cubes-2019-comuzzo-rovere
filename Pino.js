@@ -2,7 +2,7 @@
         Function for the creation of a pine,
         Ax is the x coordinate and Az is the z coordinate, they indicate where to create the pine
 */
-function Pino(Ax,Az){
+function Pino(Ax, Ay, Az){
 
         this.Tronco=new THREE.Mesh( box,MARRONE_MESH);
         this.Foglie=new THREE.Mesh( box , VERDE_SCURO_MESH);
@@ -12,6 +12,11 @@ function Pino(Ax,Az){
         this.Foglie5=new THREE.Mesh(  box, VERDE_SCURO_MESH);
 
         this.Tronco.scale.y=3;
+        this.Tronco.position.x=Ax;
+        this.Tronco.position.y=Ay + 1.5;
+        this.Tronco.position.z=Az;
+        
+
         this.Foglie.scale.x=3;
         this.Foglie.scale.z=3;
         this.Foglie.scale.y=0.3;
@@ -33,9 +38,7 @@ function Pino(Ax,Az){
         this.Foglie3.position.y=1;
         this.Foglie4.position.y=1.25;
         this.Foglie5.position.y=1.5;
-        this.Tronco.position.x=Ax;
-        this.Tronco.position.y=1.3;
-        this.Tronco.position.z=Az;
+        
 
         this.Tronco.add(this.Foglie);
         this.Tronco.add(this.Foglie2);
