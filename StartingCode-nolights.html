@@ -203,13 +203,8 @@
 			requestAnimationFrame( Update );
 			controls.update();  
 			stats.update();
-			var LiberoSouth=false;
-			var LiberoNorth=false;
-			var LiberoEast=false;
-			var LiberoWest=false;
-
-
-			var timeNow=Date.now();
+			
+			var timeNow = Date.now();
 			var passedTime = timeNow - lastTickTime;
 			if(passedTime > TICK_TIME){
 				carEastQueue.update(1);
@@ -235,33 +230,7 @@
 					outQueue.add(crossedCar4);
 				}
 				
-				if(trafficLightStateEW == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
-					trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
-					trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
-					est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-					ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-					sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-					nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-				} else if(trafficLightStateNS == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
-					trafficLightStateNS = TRAFFIC_LIGHT_STATES.RED.VAL;
-					trafficLightStateEW = TRAFFIC_LIGHT_STATES.GREEN.VAL;
-					nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-					sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-					est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-					ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-				} else if(wantNSGreen &&
-							trafficLightStateNS == TRAFFIC_LIGHT_STATES.RED.VAL &&
-							trafficLightStateEW == TRAFFIC_LIGHT_STATES.GREEN.VAL){
-					trafficLightStateEW = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
-					est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-					ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-				} else if(!wantNSGreen &&
-							trafficLightStateEW == TRAFFIC_LIGHT_STATES.RED.VAL &&
-							trafficLightStateNS == TRAFFIC_LIGHT_STATES.GREEN.VAL){
-					trafficLightStateNS = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
-					nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-					sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-				}
+				updateTrafficLight();
 				
 				if(trafficLightStateNS != TRAFFIC_LIGHT_STATES.GREEN.VAL){
 					carNorthQueue.startTick(false);
@@ -322,6 +291,36 @@
     function Render() {
       renderer.render(scene, camera);
     }
+	
+	function updateTrafficLight(){
+		if(trafficLightStateEW == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
+			trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
+			trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
+			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		} else if(trafficLightStateNS == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
+			trafficLightStateNS = TRAFFIC_LIGHT_STATES.RED.VAL;
+			trafficLightStateEW = TRAFFIC_LIGHT_STATES.GREEN.VAL;
+			nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		} else if(wantNSGreen
+					&& trafficLightStateNS == TRAFFIC_LIGHT_STATES.RED.VAL
+					&& trafficLightStateEW == TRAFFIC_LIGHT_STATES.GREEN.VAL){
+			trafficLightStateEW = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
+			est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+			ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+		} else if(!wantNSGreen
+					&& trafficLightStateEW == TRAFFIC_LIGHT_STATES.RED.VAL
+					&& trafficLightStateNS == TRAFFIC_LIGHT_STATES.GREEN.VAL){
+			trafficLightStateNS = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
+			nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+			sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+		}
+	}
     
     Start();
     Update();
