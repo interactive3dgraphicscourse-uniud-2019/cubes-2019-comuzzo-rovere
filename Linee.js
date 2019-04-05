@@ -6,7 +6,7 @@ crossroadRadius is the raius of the crossroad central square
 roadLength is the length of the street from the side of the central square
 */
 function CrossroadStreet(crossroadRadius, roadLength){
-	var laneLineMaterial = new THREE.LineBasicMaterial({WHITE, linewidth:10});
+	var laneLineMaterial = new THREE.LineBasicMaterial({color : WHITE, linewidth:10});
 	
 	var coloreStrada = new THREE.MeshBasicMaterial({color:0x111111});
 	var coloreMarciapiede = new THREE.MeshBasicMaterial({color:0x555555});

@@ -119,23 +119,36 @@
   
 				//get height data from img
 				makeMatrix(getHeightData(img, 0.1));
-  
+
 				for(var a=0; a<50; a++){
 				
 				xAlbero= crossroadRadius * 2 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 2 * crossroadRadius) / 6 ) ) );
 				zAlbero= crossroadRadius * 2 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 2 * crossroadRadius) / 6 ) ) );
 				var x = Math.round(Math.random() *3 );
+
+				switch(x){
+						case 0:	
+						break
+						case 1:
+							xAlbero*= -1;
+						break
+						case 2:
+							zAlbero*= -1;
+						break
+						case 3:
+							xAlbero*= -1;
+							zAlbero*= -1;
+						break
+				}
+
 				var postoLibero=true;
 				for(var b=0; b<PosizioniX.length; b++){
-					if((PosizioniX.length==0 || xAlbero==PosizioniX[b]) && (PosizioniX.length==0 || zAlbero==PosizioniZ[b])){
+					if((PosizioniX.length!=0 && xAlbero==PosizioniX[b]) && (PosizioniZ.length!=0 && zAlbero==PosizioniZ[b])){
 						postoLibero=false;
 					}
 				}
 
 				if(postoLibero){
-					switch(x){
-
-						case 0:
 						yAlbero=heightMatrix[Math.floor(zAlbero)+ rowLength/2 ] [Math.floor(xAlbero) + rowLength/2 ];
 						PosizioniX.push(xAlbero);	
 						PosizioniZ.push(zAlbero);
@@ -146,52 +159,8 @@
 								Pino1=new Pino(xAlbero, yAlbero, zAlbero);
 								scene.add(Pino1.Tronco);
 							}
-						break
-						case 1:
-							xAlbero*= -1;
-							yAlbero= heightMatrix[Math.floor(zAlbero + rowLength/2)] [Math.floor(xAlbero + rowLength/2)];
-							PosizioniX.push(xAlbero);	
-							PosizioniZ.push(zAlbero);
-							if(Math.round(Math.random() )==0 ) {
-								Albero1= new Albero(xAlbero, yAlbero, zAlbero);
-								scene.add(Albero1.Tronco);		
-							}else{
-								Pino1=new Pino(xAlbero, yAlbero, zAlbero);
-								scene.add(Pino1.Tronco);
-							}
-						break
-						case 2:
-							zAlbero*= -1;
-							yAlbero= heightMatrix[Math.floor(zAlbero + rowLength/2)] [Math.floor(xAlbero + rowLength/2)];
-							PosizioniX.push(xAlbero);	
-							PosizioniZ.push(zAlbero);
-						
-							if(Math.round(Math.random() )==0 ) {
-								Albero1= new Albero(xAlbero, yAlbero, zAlbero);
-								scene.add(Albero1.Tronco);		
-							}else{
-								Pino1=new Pino(xAlbero, yAlbero, zAlbero);
-								scene.add(Pino1.Tronco);
-							}
-						break
-						case 3:
-							xAlbero*= -1;
-							zAlbero*= -1;
-							PosizioniX.push(xAlbero);	
-							PosizioniZ.push(zAlbero);
-
-							yAlbero= heightMatrix[Math.floor(zAlbero + rowLength/2)] [Math.floor(xAlbero + rowLength/2)];
-							if(Math.round(Math.random() )==0 ) {
-								Albero1= new Albero(xAlbero, yAlbero, zAlbero);
-								scene.add(Albero1.Tronco);		
-							}else{
-								Pino1=new Pino(xAlbero, yAlbero, zAlbero);
-								scene.add(Pino1.Tronco);
-							}
-						break
-					}
 				}
-				}
+			}
 				makeGrid();
 			}
 
