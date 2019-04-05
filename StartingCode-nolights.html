@@ -62,7 +62,7 @@
 					var box = new THREE.BoxGeometry(1,1,1);
 					var cube = new THREE.Mesh(box , new THREE.MeshBasicMaterial({color: 0x006600}));
 					var crossroadRadius = 7;
-					var roadLength = 72;
+					var roadLength = 73;
 					var segmentSize = 6;
 					var scene, camera, renderer, controls, stats;
 					var crossroad, nord, sud, est, ovest;
@@ -112,6 +112,19 @@
 			gui.add(options, 'spawnWest' ,0 ,0.8 ,0.01).name("spawnrateWest");
 			camera.position.z = 20;
 
+var marrone1= new THREE.Mesh( box, MARRONE_MESH);
+var marrone2= new THREE.Mesh( box, MARRONE_MESH);
+marrone1.position.y =5;
+marrone1.scale.y=10;
+marrone1.scale.x=146;
+marrone1.scale.z=20;
+marrone2.position.y =5;
+marrone2.scale.y=10;
+marrone2.scale.x=146;
+marrone2.scale.z=20;
+marrone2.rotation.y=90 * Math.PI/180;
+scene.add(marrone1);
+scene.add(marrone2);
 
 			var img = new Image();
 			img.src = "textures/heightmap.png";
@@ -122,8 +135,8 @@
 
 				for(var a=0; a<50; a++){
 				
-				xAlbero= crossroadRadius * 2 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 2 * crossroadRadius) / 6 ) ) );
-				zAlbero= crossroadRadius * 2 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 2 * crossroadRadius) / 6 ) ) );
+				xAlbero= crossroadRadius * 2 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 3 * crossroadRadius) / 6 ) ) );
+				zAlbero= crossroadRadius * 2 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 3 * crossroadRadius) / 6 ) ) );
 				var x = Math.round(Math.random() *3 );
 
 				switch(x){
@@ -356,13 +369,13 @@
 	}
 	
 	function makeMatrix(data){
-		var startStreet = Math.ceil(roadLength - crossroadRadius * 1.5) + 1;
+		var startStreet = Math.floor(roadLength - crossroadRadius * 1.5) + 1 ;
 		var endStreet = Math.floor(startStreet - 1 + crossroadRadius * 3) - 1;
 		for(var i = 0; i < rowLength; i++){
 			var row = [];
 			for(var j = 0; j < rowLength; j++){
 				var rowOffset = rowLength * i;
-				if((i < startStreet || i > endStreet) && (j < startStreet || j > endStreet)){
+				if( (i < startStreet || i > endStreet) && (j < startStreet || j > endStreet)){
 					var height = data[rowOffset + j];
 					row[j] = height;
 				} else {
