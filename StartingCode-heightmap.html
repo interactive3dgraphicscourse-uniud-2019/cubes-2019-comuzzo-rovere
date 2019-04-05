@@ -27,11 +27,6 @@
 		
 		var scene, camera, renderer, controls, stats;
 		
-		var rowLength = 60;
-		var heightMatrix = [];
-		var box= new THREE.BoxGeometry(1,1,1);
-		
-		
 		//return array with height data from img, taken from: http://danni-three.blogspot.it/2013/09/threejs-heightmaps.html
 		function getHeightData(img,scale) {
   
@@ -98,38 +93,13 @@
 			img.onload = function () {
   
 				//get height data from img
-				makeGrid(getHeightData(img, 0.01));
+				var data = getHeightData(img,0.1);
   
 				// load img source
-				
+				img.src = "textures/heightmap2.png";
 			}
 			
-			img.src = "textures/heightmap2.png";
 			
-		}
-		
-		function makeGrid(data){
-			for(var i = 0; i < rowLength; i++){
-				var row = [];
-				for(var j = 0; j < rowLength; j++){
-					var rowOffset = rowLength * i;
-					if((i < 66 || i > 80) && (j < 66 || j > 80)){
-						var height = data[rowOffset + j];
-						var x = j-1 + 0.5 - rowLength/2;
-						var z = i-1 + 0.5 - rowLength/2;
-						var block   = new THREE.Mesh(box , new THREE.MeshBasicMaterial({color: 0x000000}));
-						block.position.x = x;
-						block.position.z = z;
-						block.scale.y = height;
-						block.position.y = height/2;
-						scene.add(block);
-						row[j] = height;
-					} else {
-						row[j] = 0.0;
-					}
-				}
-				heightMatrix[i] = row;
-			}
 		}
 		
 		function Update() {

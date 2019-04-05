@@ -76,12 +76,11 @@
 					var PosizioniX=[], PosizioniZ=[];
 					var heightMatrix = [];
 					var options = {
-						spawnEast : 0.1,
-						spawnWest : 0.1,
-						spawnNorth : 0.1,
-						spawnSouth : 0.1,
-						VerdeSuZ: function() { wantNSGreen = true;  },
-						VerdeSuX: function() { wantNSGreen = false; }
+						spawnEast : 35,
+						spawnWest : 35,
+						spawnNorth : 35,
+						spawnSouth : 35,
+						"traffic light": function() { wantNSGreen = !wantNSGreen;  }
 					};
 
 		function Start() {
@@ -104,27 +103,26 @@
 			controls = new THREE.OrbitControls( camera );
 			controls.addEventListener( 'change', Render );
 			gui = new dat.GUI();
-			gui.add(options, 'VerdeSuZ');
-			gui.add(options, 'VerdeSuX');
-			gui.add(options, 'spawnSouth' ,0 ,0.8 ,0.01).name("spawnrateSouth");
-			gui.add(options, 'spawnEast' ,0 ,0.8 ,0.01).name("spawnrateEast");
-			gui.add(options, 'spawnNorth' ,0 ,0.8 ,0.01).name("spawnrateNorth");
-			gui.add(options, 'spawnWest' ,0 ,0.8 ,0.01).name("spawnrateWest");
+			gui.add(options, "traffic light");
+			gui.add(options, 'spawnNorth', 0, 100, 1).name("traffic north");
+			gui.add(options, 'spawnSouth', 0, 100, 1).name("traffic south");
+			gui.add(options, 'spawnEast', 0, 100, 1).name("traffic east");
+			gui.add(options, 'spawnWest', 0, 100, 1).name("traffic west");
 			camera.position.z = 20;
 
-var marrone1= new THREE.Mesh( box, MARRONE_MESH);
-var marrone2= new THREE.Mesh( box, MARRONE_MESH);
-marrone1.position.y =5;
-marrone1.scale.y=10;
-marrone1.scale.x=146;
-marrone1.scale.z=20;
-marrone2.position.y =5;
-marrone2.scale.y=10;
-marrone2.scale.x=146;
-marrone2.scale.z=20;
-marrone2.rotation.y=90 * Math.PI/180;
-scene.add(marrone1);
-scene.add(marrone2);
+			var marrone1= new THREE.Mesh( box, MARRONE_MESH);
+			var marrone2= new THREE.Mesh( box, MARRONE_MESH);
+			marrone1.position.y =5;
+			marrone1.scale.y=10;
+			marrone1.scale.x=146;
+			marrone1.scale.z=20;
+			marrone2.position.y =5;
+			marrone2.scale.y=10;
+			marrone2.scale.x=146;
+			marrone2.scale.z=20;
+			marrone2.rotation.y=90 * Math.PI/180;
+			scene.add(marrone1);
+			scene.add(marrone2);
 
 			var img = new Image();
 			img.src = "textures/heightmap.png";
@@ -235,10 +233,10 @@ scene.add(marrone2);
 				carWestQueue.update(1);
 				carNorthQueue.update(1);
 				outQueue.update(1);
-				var crossedCar1 = carEastQueue.endTick(options.spawnEast);
-				var crossedCar2 = carSouthQueue.endTick(options.spawnSouth);
-				var crossedCar3 = carWestQueue.endTick(options.spawnWest);
-				var crossedCar4 = carNorthQueue.endTick(options.spawnNorth);
+				var crossedCar1 = carEastQueue.endTick(options.spawnEast/100);
+				var crossedCar2 = carSouthQueue.endTick(options.spawnSouth/100);
+				var crossedCar3 = carWestQueue.endTick(options.spawnWest/100);
+				var crossedCar4 = carNorthQueue.endTick(options.spawnNorth/100);
 				outQueue.endTick();
 				if(crossedCar1 != 0){
 					outQueue.add(crossedCar1);
