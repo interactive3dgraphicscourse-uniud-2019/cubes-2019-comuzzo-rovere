@@ -31,282 +31,212 @@
 	<body>
 		
 	<script>
-					// COLORS;
-					BLUE = 0x0000ff;
-					BLU_MESH = new THREE.MeshBasicMaterial({color: BLUE});
-					SEMAPHORE_GREY = 0xcccccc;
-					BLACK = 0x000000;
-					CARS_MESH=[
-						new THREE.MeshBasicMaterial({color:0xb3b3b3}),
-						new THREE.MeshBasicMaterial({color:0xbb0a30}),
-						new THREE.MeshBasicMaterial({color:0xb6b1a9}),
-						new THREE.MeshBasicMaterial({color:0xBF3EFF}),
-						new THREE.MeshBasicMaterial({color:0xFFF536})
-					];
-					WHITE=0xffffff;
-					GRIGIO_MESH=new THREE.MeshBasicMaterial({color: SEMAPHORE_GREY});
-					VERDE_CHIARO_MESH= new THREE.MeshBasicMaterial({color:0x00ff00});
-					VERDE_MESH= new THREE.MeshBasicMaterial({color:0x009900});
-					VERDE_SCURO_MESH=new THREE.MeshBasicMaterial({color:0x004400});
-					NERO_MESH=new THREE.MeshBasicMaterial({color:BLACK});
-					MARRONE_MESH= new THREE.MeshBasicMaterial({color:0x654321});
-					ROSSO_MESH= new THREE.MeshBasicMaterial({color:0xff00000});
+		// COLORS;
+		const BLUE = 0x0000ff;
+		const SEMAPHORE_GREY = 0xcccccc;
+		const BLACK = 0x000000;
+		const WHITE = 0xffffff;
+		CARS_MESH=[
+			new THREE.MeshBasicMaterial({color:0xb3b3b3}),
+			new THREE.MeshBasicMaterial({color:0xbb0a30}),
+			new THREE.MeshBasicMaterial({color:0xb6b1a9}),
+			new THREE.MeshBasicMaterial({color:0xBF3EFF}),
+			new THREE.MeshBasicMaterial({color:0xFFF536})
+		];
+		const MESH = {
+			GREY: new THREE.MeshBasicMaterial({color: SEMAPHORE_GREY}),
+			LIGHT_GREEN: new THREE.MeshBasicMaterial({color:0x00ff00}),
+			GREEN: new THREE.MeshBasicMaterial({color:0x009900}),
+			DARK_GREEN: new THREE.MeshBasicMaterial({color:0x004400}),
+			BLACK: new THREE.MeshBasicMaterial({color:BLACK}),
+			BROWN: new THREE.MeshBasicMaterial({color:0x654321}),
+		}
+
+		const RAD_TO_DEG_COEFF = Math.PI/180;
+		const ANGLE_90 = 90 * RAD_TO_DEG_COEFF;
+		const ANGLE_180 = 180 * RAD_TO_DEG_COEFF;
+		const ANGLE_270 = 270 * RAD_TO_DEG_COEFF;
+	
+		const TICK_TIME = 3500;
+
+		var box = new THREE.BoxGeometry(1,1,1);
+		var cube = new THREE.Mesh(box , new THREE.MeshBasicMaterial({color: 0x006600}));
+		const CROSSROAD_RADIUS = 7;
+		const ROAD_LENGTH = 73;
+		const SEGMENT_SIZE = 6;
+		const PIVOT_DIST = 9;
+		const ROW_LENGTH = 146;
+		var scene, camera, renderer, controls, stats;
+		var carNorthQueue, carSouthQueue, carEastQueue, carWestQueue, queues;
+		var crossroad, nord, sud, est, ovest;
+		var gui;
+		var lastTickTime;
+		var outQueue;
+		var trafficLightStateNS, trafficLightStateEW;
+		var wantNSGreen;
+		var heightMatrix = [];
+		var options = {
+			spawnEast : 35,
+			spawnWest : 35,
+			spawnNorth : 35,
+			spawnSouth : 35,
+			"traffic light": function() { wantNSGreen = !wantNSGreen;  }
+		};
+
+	function Start() {
+		scene = new THREE.Scene();
+		camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+		renderer = new THREE.WebGLRenderer( {antialias: true} );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setClearColor( 0xf0f0f0 );
+		document.body.appendChild( renderer.domElement );
+			
+		camera.position.set(3,4,6);
+		camera.lookAt( new THREE.Vector3(0,0,0));
+			
+		stats = new Stats();
+		stats.domElement.style.position = 'absolute';
+		stats.domElement.style.top = '0px';
+		document.body.appendChild( stats.domElement );
 		
-					RAD_TO_DEG_COEFF = Math.PI/180;
-					ANGLE_90 = 90 * RAD_TO_DEG_COEFF;
-					ANGLE_180 = 180 * RAD_TO_DEG_COEFF;
-					ANGLE_270 = 270 * RAD_TO_DEG_COEFF;
-		
-					TICK_TIME = 3500;
+		controls = new THREE.OrbitControls( camera );
+		controls.addEventListener( 'change', Render );
+		gui = new dat.GUI();
+		gui.add(options, "traffic light");
+		gui.add(options, "spawnNorth", 0, 100, 1).name("north traffic %" );
+		gui.add(options, "spawnSouth", 0, 100, 1).name("south traffic %");
+		gui.add(options, "spawnEast", 0, 100, 1).name("east traffic %");
+		gui.add(options, "spawnWest", 0, 100, 1).name("west traffic %");
+		camera.position.z = 20;
 
-					var box = new THREE.BoxGeometry(1,1,1);
-					var cube = new THREE.Mesh(box , new THREE.MeshBasicMaterial({color: 0x006600}));
-					var crossroadRadius = 7;
-					var roadLength = 73;
-					var segmentSize = 6;
-					var scene, camera, renderer, controls, stats;
-					var crossroad, nord, sud, est, ovest;
-					var gui, spawn;
-					var lastTickTime;
-					var carQueue, outQueue;
-					var trafficLightStateNS;
-					var trafficLightStateEW;
-					var wantNSGreen;
-					var rowLength = 146;
-					var PosizioniX=[], PosizioniZ=[];
-					var heightMatrix = [];
-					var options = {
-						spawnEast : 35,
-						spawnWest : 35,
-						spawnNorth : 35,
-						spawnSouth : 35,
-						"traffic light": function() { wantNSGreen = !wantNSGreen;  }
-					};
-
-		function Start() {
-			scene = new THREE.Scene();
-			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-			renderer = new THREE.WebGLRenderer( {antialias: true} );
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			renderer.setClearColor( 0xf0f0f0 );
-			document.body.appendChild( renderer.domElement );
-			
-			camera.position.set(3,4,6);
-			camera.lookAt( new THREE.Vector3(0,0,0));
-			
-			stats = new Stats();
-			stats.domElement.style.position = 'absolute';
-			stats.domElement.style.top = '0px';
-			document.body.appendChild( stats.domElement );
-			
-			controls = new THREE.OrbitControls( camera );
-			controls.addEventListener( 'change', Render );
-			gui = new dat.GUI();
-			gui.add(options, "traffic light");
-			gui.add(options, 'spawnNorth', 0, 100, 1).name("traffic north");
-			gui.add(options, 'spawnSouth', 0, 100, 1).name("traffic south");
-			gui.add(options, 'spawnEast', 0, 100, 1).name("traffic east");
-			gui.add(options, 'spawnWest', 0, 100, 1).name("traffic west");
-			camera.position.z = 20;
-
-			var marrone1= new THREE.Mesh( box, MARRONE_MESH);
-			var marrone2= new THREE.Mesh( box, MARRONE_MESH);
-			marrone1.position.y =5;
-			marrone1.scale.y=10;
-			marrone1.scale.x=146;
-			marrone1.scale.z=20;
-			marrone2.position.y =5;
-			marrone2.scale.y=10;
-			marrone2.scale.x=146;
-			marrone2.scale.z=20;
-			marrone2.rotation.y=90 * Math.PI/180;
-			scene.add(marrone1);
-			scene.add(marrone2);
-
-			var img = new Image();
-			img.src = "textures/heightmap.png";
-			img.onload = function () {
+		var img = new Image();
+		img.src = "textures/heightmap.png";
+		img.onload = function () {
   
-				//get height data from img
-				makeMatrix(getHeightData(img, 0.1));
-
-				for(var a=0; a<50; a++){
-				
-				xAlbero= crossroadRadius * 2 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 3 * crossroadRadius) / 6 ) ) );
-				zAlbero= crossroadRadius * 2 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 3 * crossroadRadius) / 6 ) ) );
-				var x = Math.round(Math.random() *3 );
-
-				switch(x){
-						case 0:	
-						break
-						case 1:
-							xAlbero*= -1;
-						break
-						case 2:
-							zAlbero*= -1;
-						break
-						case 3:
-							xAlbero*= -1;
-							zAlbero*= -1;
-						break
-				}
-
-				var postoLibero=true;
-				for(var b=0; b<PosizioniX.length; b++){
-					if((PosizioniX.length!=0 && xAlbero==PosizioniX[b]) && (PosizioniZ.length!=0 && zAlbero==PosizioniZ[b])){
-						postoLibero=false;
-					}
-				}
-
-				if(postoLibero){
-						yAlbero=heightMatrix[Math.floor(zAlbero)+ rowLength/2 ] [Math.floor(xAlbero) + rowLength/2 ];
-						PosizioniX.push(xAlbero);	
-						PosizioniZ.push(zAlbero);
-							if(Math.round(Math.random() )==0 ) {	
-								Albero1= new Albero(xAlbero, yAlbero, zAlbero);
-								scene.add(Albero1.Tronco);	
-							}else{
-								Pino1=new Pino(xAlbero, yAlbero, zAlbero);
-								scene.add(Pino1.Tronco);
-							}
-				}
-			}
-				makeGrid();
-			}
-
-
-			carEastQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.EAST);
-			carSouthQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.SOUTH);
-			carWestQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.WEST);
-			carNorthQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.NORTH);
-			outQueue = new OutQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene);
-			
-			crossroad = new CrossroadStreet(crossroadRadius, roadLength);
-			sud = new trafficLight(crossroadRadius, crossroadRadius, 0);
-			est = new trafficLight(crossroadRadius, -crossroadRadius, ANGLE_90);
-			nord = new trafficLight(-crossroadRadius, -crossroadRadius, ANGLE_180);
-			ovest = new trafficLight(-crossroadRadius, crossroadRadius, ANGLE_270);
-			
-			sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			
-			trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
-			trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
-			wantNSGreen = true;
-
-			crossroad.mainParent.position.y=10;
-			sud.mainParent.position.y+=10;
-			est.mainParent.position.y+=10;
-			nord.mainParent.position.y+=10;
-			ovest.mainParent.position.y+=10;
-			scene.add(crossroad.mainParent);
-			scene.add(sud.mainParent);
-			scene.add(est.mainParent);
-			scene.add(nord.mainParent);
-			scene.add(ovest.mainParent);
-			
-			carEastQueue.endTick(1);
-			carEastQueue.startTick(0);
-			carSouthQueue.endTick(1);
-			carSouthQueue.startTick(0);
-			carWestQueue.endTick(1);
-			carWestQueue.startTick(0);
-			carNorthQueue.endTick(1);
-			carNorthQueue.startTick(0);
-			lastTickTime = Date.now();
+			//get height data from img
+			makeMatrix(getHeightData(img, 0.1));
+			makeTrees();
+			makeGrid();
 		}
+
+
+		carEastQueue = new CarQueue(scene, STREETS.EAST);
+		carSouthQueue = new CarQueue(scene, STREETS.SOUTH);
+		carWestQueue = new CarQueue(scene, STREETS.WEST);
+		carNorthQueue = new CarQueue(scene, STREETS.NORTH);
+		outQueue = new OutQueue(scene);
+		
+		queues = [carNorthQueue, carSouthQueue, carEastQueue, carWestQueue];
+		
+		crossroad = new CrossroadStreet(CROSSROAD_RADIUS, ROAD_LENGTH);
+		sud = new trafficLight(CROSSROAD_RADIUS, CROSSROAD_RADIUS, 0);
+		est = new trafficLight(CROSSROAD_RADIUS, -CROSSROAD_RADIUS, ANGLE_90);
+		nord = new trafficLight(-CROSSROAD_RADIUS, -CROSSROAD_RADIUS, ANGLE_180);
+		ovest = new trafficLight(-CROSSROAD_RADIUS, CROSSROAD_RADIUS, ANGLE_270);
+			
+		sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+		nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			
+		trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
+		trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
+		wantNSGreen = true;
+
+		crossroad.mainParent.position.y=10;
+		sud.mainParent.position.y+=10;
+		est.mainParent.position.y+=10;
+		nord.mainParent.position.y+=10;
+		ovest.mainParent.position.y+=10;
+		scene.add(crossroad.mainParent);
+		scene.add(sud.mainParent);
+		scene.add(est.mainParent);
+		scene.add(nord.mainParent);
+		scene.add(ovest.mainParent);
+		
+		for(let i = 0; i < 4; i++){
+			let q = queues[i];
+			q.startTick(0);
+		}
+		lastTickTime = Date.now();
+	}
 			
 
-		function Update() {
-			requestAnimationFrame( Update );
-			controls.update();  
-			stats.update();
+	function Update() {
+		requestAnimationFrame( Update );
+		controls.update();  
+		stats.update();
+		
+		var timeNow = Date.now();
+		var passedTime = timeNow - lastTickTime;
+		if(passedTime > TICK_TIME){
+			outQueue.update(1);
+			outQueue.endTick();
+			let spawnRates = [options.spawnNorth, options.spawnSouth,
+							options.spawnEast, options.spawnWest];
+			for(let i = 0; i < 4; i++){
+				let queue = queues[i];
+				queue.update(1);
+				let crossedCar = queue.endTick(spawnRates[i] / 100);
+				if(crossedCar != 0){
+					outQueue.add(crossedCar);
+				}
+			}
 			
-			var timeNow = Date.now();
-			var passedTime = timeNow - lastTickTime;
-			if(passedTime > TICK_TIME){
-				carEastQueue.update(1);
-				carSouthQueue.update(1);
-				carWestQueue.update(1);
-				carNorthQueue.update(1);
-				outQueue.update(1);
-				var crossedCar1 = carEastQueue.endTick(options.spawnEast/100);
-				var crossedCar2 = carSouthQueue.endTick(options.spawnSouth/100);
-				var crossedCar3 = carWestQueue.endTick(options.spawnWest/100);
-				var crossedCar4 = carNorthQueue.endTick(options.spawnNorth/100);
-				outQueue.endTick();
-				if(crossedCar1 != 0){
-					outQueue.add(crossedCar1);
-				}
-				if(crossedCar2 != 0){
-					outQueue.add(crossedCar2);
-				}
-				if(crossedCar3 != 0){
-					outQueue.add(crossedCar3);
-				}
-				if(crossedCar4 != 0){
-					outQueue.add(crossedCar4);
-				}
-				
-				updateTrafficLight();
-				
-				if(trafficLightStateNS != TRAFFIC_LIGHT_STATES.GREEN.VAL){
-					carNorthQueue.startTick(false);
-					carSouthQueue.startTick(false);
-				} else {
-					var northHead = carNorthQueue.getHead();
-					var southHead = carSouthQueue.getHead();
-					var canGoN = true;
-					var canGoS = true;
-					if(northHead != 0 && southHead != 0){
-						if(northHead.turnDir == TURN_DIR.LEFT && southHead.turnDir != TURN_DIR.LEFT){
-							canGoN = false;
-						} else if(northHead.turnDir != TURN_DIR.LEFT && southHead.turnDir == TURN_DIR.LEFT){
-							canGoS = false;
-						}
-					}
-					carNorthQueue.startTick(canGoN);
-					carSouthQueue.startTick(canGoS);
-					
-				}
-				if(trafficLightStateEW != TRAFFIC_LIGHT_STATES.GREEN.VAL){
-					carEastQueue.startTick(false);
-					carWestQueue.startTick(false);
-				} else {
-					var eastHead = carEastQueue.getHead();
-					var westHead = carWestQueue.getHead();
-					var canGoE = true;
-					var canGoW = true;
-					if(eastHead != 0 && westHead != 0){
-						if(eastHead.turnDir == TURN_DIR.LEFT && westHead.turnDir != TURN_DIR.LEFT){
-							canGoE = false;
-						} else if(eastHead.turnDir != TURN_DIR.LEFT && westHead.turnDir == TURN_DIR.LEFT){
-							canGoW = false;
-						}
-					}
-					carEastQueue.startTick(canGoE);
-					carWestQueue.startTick(canGoW);
-				}
-				
-				carEastQueue.update((TICK_TIME - passedTime)/TICK_TIME);
-				carSouthQueue.update((TICK_TIME - passedTime)/TICK_TIME);
-				carWestQueue.update((TICK_TIME - passedTime)/TICK_TIME);
-				carNorthQueue.update((TICK_TIME - passedTime)/TICK_TIME);
-
-				outQueue.update((TICK_TIME - passedTime)/TICK_TIME);
-				lastTickTime = timeNow ;
+			updateTrafficLight();
+			
+			if(trafficLightStateNS != TRAFFIC_LIGHT_STATES.GREEN.VAL){
+				carNorthQueue.startTick(false);
+				carSouthQueue.startTick(false);
 			} else {
-				carEastQueue.update(passedTime/TICK_TIME);
-				carSouthQueue.update(passedTime/TICK_TIME);
-				carWestQueue.update(passedTime/TICK_TIME);
-				carNorthQueue.update(passedTime/TICK_TIME);
-				outQueue.update(passedTime/TICK_TIME);
+				let northHead = carNorthQueue.getHead();
+				let southHead = carSouthQueue.getHead();
+				let canGoN = true;
+				let canGoS = true;
+				if(northHead != 0 && southHead != 0){
+					if(northHead.turnDir == TURN_DIR.LEFT && southHead.turnDir != TURN_DIR.LEFT){
+						canGoN = false;
+					} else if(northHead.turnDir != TURN_DIR.LEFT && southHead.turnDir == TURN_DIR.LEFT){
+						canGoS = false;
+					}
+				}
+				carNorthQueue.startTick(canGoN);
+				carSouthQueue.startTick(canGoS);
+				
 			}
-			Render();
+			if(trafficLightStateEW != TRAFFIC_LIGHT_STATES.GREEN.VAL){
+				carEastQueue.startTick(false);
+				carWestQueue.startTick(false);
+			} else {
+				let eastHead = carEastQueue.getHead();
+				let westHead = carWestQueue.getHead();
+				let canGoE = true;
+				let canGoW = true;
+				if(eastHead != 0 && westHead != 0){
+					if(eastHead.turnDir == TURN_DIR.LEFT && westHead.turnDir != TURN_DIR.LEFT){
+						canGoE = false;
+					} else if(eastHead.turnDir != TURN_DIR.LEFT && westHead.turnDir == TURN_DIR.LEFT){
+						canGoW = false;
+					}
+				}
+				carEastQueue.startTick(canGoE);
+				carWestQueue.startTick(canGoW);
+			}
+			
+			for(let i = 0; i < 4; i++){
+				queues[i].update((TICK_TIME - passedTime)/TICK_TIME);
+			}
+			outQueue.update((TICK_TIME - passedTime)/TICK_TIME);
+			lastTickTime = timeNow ;
+		} else {
+			for(let i = 0; i < 4; i++){
+				queues[i].update(passedTime/TICK_TIME);
+			}
+			outQueue.update(passedTime/TICK_TIME);
 		}
+		Render();
+	}
     
     function Render() {
       renderer.render(scene, camera);
@@ -342,6 +272,53 @@
 		}
 	}
 	
+	function makeTrees(){
+		var treePosXs = [], treePosZs = [];
+		for(let i = 0; i < 50; i++){
+			let xTree = CROSSROAD_RADIUS * 2 + ( Math.round ( 
+				Math.round ( Math.random()* 6 ) * ( ( ROAD_LENGTH - 3 
+				* CROSSROAD_RADIUS) / 6 ) ) );
+			let zTree = CROSSROAD_RADIUS * 2 + ( Math.round ( 
+				Math.round ( Math.random()* 6 ) * ( ( ROAD_LENGTH - 3 
+				* CROSSROAD_RADIUS) / 6 ) ) );
+			let quadrant = Math.round(Math.random() *3 );
+			switch(quadrant){
+				case 0:
+					break;
+				case 1:
+					xTree*= -1;
+					break;
+				case 2:
+					zTree*= -1;
+					break;
+				case 3:
+					xTree*= -1;
+					zTree*= -1;
+					break;
+			}
+			let freeSlot = true;
+			for(let i=0; i < treePosXs.length; i++){
+				if((treePosXs.length!=0 && xTree==treePosXs[i]) 
+						&& (treePosZs.length!=0 && zTree==treePosZs[i])){
+					freeSlot = false;
+				}
+			}
+			if(freeSlot){
+				var yTree = heightMatrix[Math.floor(zTree)+ ROW_LENGTH/2 ]
+								[Math.floor(xTree) + ROW_LENGTH/2 ];
+				treePosXs.push(xTree);
+				treePosZs.push(zTree);
+				if(Math.round(Math.random() )==0 ) {
+					let tree = new Albero(xTree, yTree, zTree);
+					scene.add(tree.Tronco);
+				}else{
+					let tree = new Pino(xTree, yTree, zTree);
+					scene.add(tree.Tronco);
+				}
+			}
+		}
+	}
+	
 	//return array with height data from img, taken from: http://danni-three.blogspot.it/2013/09/threejs-heightmaps.html
 	function getHeightData(img,scale) {
 		if(scale == undefined) scale=1;
@@ -367,14 +344,14 @@
 	}
 	
 	function makeMatrix(data){
-		var startStreet = Math.floor(roadLength - crossroadRadius * 1.5) + 1 ;
-		var endStreet = Math.floor(startStreet - 1 + crossroadRadius * 3) - 1;
-		for(var i = 0; i < rowLength; i++){
-			var row = [];
-			for(var j = 0; j < rowLength; j++){
-				var rowOffset = rowLength * i;
+		const startStreet = Math.floor(ROAD_LENGTH - CROSSROAD_RADIUS * 1.5) + 1;
+		const endStreet = Math.floor(startStreet - 1 + CROSSROAD_RADIUS * 3) - 1;
+		for(let i = 0; i < ROW_LENGTH; i++){
+			let row = [];
+			for(let j = 0; j < ROW_LENGTH; j++){
+				let rowOffset = ROW_LENGTH * i;
 				if( (i < startStreet || i > endStreet) && (j < startStreet || j > endStreet)){
-					var height = data[rowOffset + j];
+					const height = data[rowOffset + j];
 					row[j] = height;
 				} else {
 					row[j] = -1.0;
@@ -384,69 +361,69 @@
 		}
 	}
 		
-		function makeGrid(){
-			var blockNum = 0;
-			for(var i = 0; i < rowLength; i++){
-				for(var j = 0; j < rowLength; j++){
-					var h = heightMatrix[i][j];
-					if(h != -1){
-						blockNum++;
-						heightMatrix[i][j] = -1.0;
-						j = makeBlock(h, i, j, 1, 1) - 1;
-					}
+	function makeGrid(){
+		var blockNum = 0;
+		for(let i = 0; i < ROW_LENGTH; i++){
+			for(let j = 0; j < ROW_LENGTH; j++){
+				const h = heightMatrix[i][j];
+				if(h != -1){
+					blockNum++;
+					heightMatrix[i][j] = -1.0;
+					j = makeBlock(h, i, j, 1, 1) - 1;
 				}
 			}
-			console.log(blockNum);
-			console.log("compression ratio: " + Math.pow(rowLength, 2)/blockNum);
 		}
+		console.log(blockNum);
+		console.log("compression ratio: " + Math.pow(ROW_LENGTH, 2)/blockNum);
+	}
 		
-		function makeBlock(h, startRow, startColumn, height, width){
-			var mHeight = height;
-			var mWidth = width;
-			var bottom = false;
-			if(startRow + mHeight < rowLength){
-				bottom = true;
-				for(var i = startColumn; i < startColumn + width; i++){
-					bottom = bottom && heightMatrix[startRow + mHeight][i] == h;
-				}
-				if(bottom){
-					for(var i = startColumn; i < startColumn + width; i++){
-						heightMatrix[startRow + mHeight][i] = -1.0;
-					}
-					mHeight++;
-				}
+	function makeBlock(h, startRow, startColumn, height, width){
+		var mHeight = height;
+		var mWidth = width;
+		var bottom = false;
+		if(startRow + mHeight < ROW_LENGTH){
+			bottom = true;
+			for(let i = startColumn; i < startColumn + width; i++){
+				bottom = bottom && heightMatrix[startRow + mHeight][i] == h;
 			}
-			var right = false;
-			if(startColumn + mWidth < rowLength){
-				right = true;
-				for(var j = startRow; j < startRow + mHeight; j++){
-					right = right && heightMatrix[j][startColumn + mWidth] == h;
+			if(bottom){
+				for(let i = startColumn; i < startColumn + width; i++){
+					heightMatrix[startRow + mHeight][i] = -1.0;
 				}
-				if(right){
-					for(var j = startRow; j < startRow + mHeight; j++){
-						heightMatrix[j][startColumn + width] = -1.0;
-					}
-					mWidth++;
-				}
+				mHeight++;
 			}
-			if(bottom || right){
-				return makeBlock(h, startRow, startColumn, mHeight, mWidth);
-			}
-			var x = mWidth/2 + startColumn - rowLength/2;
-			var z = mHeight/2 + startRow - rowLength/2;
-			var block = cube.clone();
-			block.position.x = x;
-			block.position.z = z;
-			if(h == 0){
-				h = 0.0000001;
-			}
-			block.scale.y = h;
-			block.scale.x = mWidth;
-			block.scale.z = mHeight;
-			block.position.y = h/2;
-			scene.add(block);
-			return startColumn + mWidth;
 		}
+		var right = false;
+		if(startColumn + mWidth < ROW_LENGTH){
+			right = true;
+			for(let j = startRow; j < startRow + mHeight; j++){
+				right = right && heightMatrix[j][startColumn + mWidth] == h;
+			}
+			if(right){
+				for(let j = startRow; j < startRow + mHeight; j++){
+					heightMatrix[j][startColumn + width] = -1.0;
+				}
+				mWidth++;
+			}
+		}
+		if(bottom || right){
+			return makeBlock(h, startRow, startColumn, mHeight, mWidth);
+		}
+		const x = mWidth/2 + startColumn - ROW_LENGTH/2;
+		const z = mHeight/2 + startRow - ROW_LENGTH/2;
+		var block = cube.clone();
+		block.position.x = x;
+		block.position.z = z;
+		if(h == 0){
+			h = 0.0000001;
+		}
+		block.scale.y = h;
+		block.scale.x = mWidth;
+		block.scale.z = mHeight;
+		block.position.y = h/2;
+		scene.add(block);
+		return startColumn + mWidth;
+	}
     
     Start();
     Update();

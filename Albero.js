@@ -4,8 +4,8 @@ Ax is the x coordinate and Az is the z coordinate, they indicate where to create
 */
     function Albero(Ax, Ay, Az){
        
-        this.Tronco=new THREE.Mesh( box, MARRONE_MESH);
-        this.Foglie=new THREE.Mesh( box, VERDE_MESH);
+        this.Tronco=new THREE.Mesh( box, MESH.BROWN);
+        this.Foglie=new THREE.Mesh( box, MESH.GREEN);
         
         this.Tronco.scale.y=6;
         this.Foglie.scale.x=3;

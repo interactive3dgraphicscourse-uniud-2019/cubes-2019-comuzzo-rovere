@@ -1,19 +1,16 @@
-
-
-function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, street){
-	this.segmentNumber = Math.floor(roadLength/segmentSize);
-	this.segmentSize = segmentSize;
-	this.crossroadRadius = crossroadRadius;
-	this.pivotDist = pivotDist;
+function CarQueue(scene, street){
+	this.segmentNumber = Math.floor(ROAD_LENGTH/SEGMENT_SIZE);
+	this.segmentSize = SEGMENT_SIZE;
+	this.crossroadRadius = CROSSROAD_RADIUS;
+	this.pivotDist = PIVOT_DIST;
 
 	this.scene = scene;
 	this.street = street;
 	this.queue = [];
-	for(var i = 0; i < this.segmentNumber; i++){
+	for(let i = 0; i < this.segmentNumber; i++){
 		this.queue[i] = 0;
 	}
 
-	
 	this.endTick = function(spawnProb){
 		var crossedCar = 0;
 		var head = this.queue[0];
@@ -21,17 +18,17 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 			crossedCar = head;
 			this.queue[0] = 0;
 		}
-		for(var i = 1; i < this.segmentNumber; i++){
-			var prev = this.queue[i-1];
+		for(let i = 1; i < this.segmentNumber; i++){
+			let prev = this.queue[i-1];
 			if(prev == 0){
-				var curr = this.queue[i];
+				let curr = this.queue[i];
 				if(curr != 0){
 					curr.setDistFromOrigin(this.segmentSize * (i-1) + this.crossroadRadius + (this.pivotDist - this.crossroadRadius));
 					curr.isMoving = false;
 					this.queue[i-1] = curr;
 					this.queue[i] = 0;
 				} else if(i == this.segmentNumber - 1 && Math.random() < spawnProb){
-					var spawnedCar = new Car(this.street, Math.floor(Math.random() * 3),
+					let spawnedCar = new Car(this.street, Math.floor(Math.random() * 3),
 								CARS_MESH[Math.floor(Math.random() * CARS_MESH.length)]);
 					spawnedCar.setDistFromOrigin(this.segmentSize * this.segmentNumber + (this.pivotDist - this.crossroadRadius));
 					switch(spawnedCar.turnDir){
@@ -61,23 +58,21 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 
 		return crossedCar;
 	}
-
 	
 	this.startTick = function(canGo){
 		if(canGo){
-			var head = this.queue[0];
+			let head = this.queue[0];
 			if(head != 0){
 				head.isMoving = true;
 			}
 		}
+		for(let i = 1; i < this.segmentNumber; i++){
 
-		for(var i = 1; i < this.segmentNumber; i++){
-
-				var prev = this.queue[i-1];
-				var curr = this.queue[i];
+				let prev = this.queue[i-1];
+				let curr = this.queue[i];
 				if(curr != 0){
 					if(prev == 0 || prev.isMoving){
-					this.queue[i].isMoving = true;
+						this.queue[i].isMoving = true;
 					}
 				}
 		}
@@ -103,8 +98,8 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 				break;
 			}
 		}
-		for(var i = 1; i < this.segmentNumber; i++){
-			var car = this.queue[i];
+		for(let i = 1; i < this.segmentNumber; i++){
+			let car = this.queue[i];
 			if(car != 0 && car.isMoving){
 				car.setDistFromOrigin((this.segmentSize * (i) + this.crossroadRadius
 				- this.segmentSize * percentage) + (this.pivotDist - this.crossroadRadius));
@@ -117,14 +112,14 @@ function CarQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene, st
 	}
 } // CarQueue
 
-function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
-	this.segmentNumber = Math.floor(roadLength/segmentSize);
-	this.segmentSize = segmentSize;
-	this.crossroadRadius = crossroadRadius;
-	this.pivotDist = pivotDist;
+function OutQueue(scene){
+	this.segmentNumber = Math.floor(ROAD_LENGTH/SEGMENT_SIZE);
+	this.segmentSize = SEGMENT_SIZE;
+	this.crossroadRadius = CROSSROAD_RADIUS;
+	this.pivotDist = PIVOT_DIST;
 	this.crossedQueue = [];
 	this.scene = scene;
-	this.crossingLength = crossroadRadius + (pivotDist - crossroadRadius);
+	this.crossingLength = CROSSROAD_RADIUS + (PIVOT_DIST - CROSSROAD_RADIUS);
 	
 	this.add = function(car){
 		car.outSegment = 0;
@@ -132,8 +127,8 @@ function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
 	}
 	
 	this.update = function(percentage){
-		for(var i = 0; i < this.crossedQueue.length; i++){
-			var car = this.crossedQueue[i];
+		for(let i = 0; i < this.crossedQueue.length; i++){
+			let car = this.crossedQueue[i];
 			if(car.turnDir == TURN_DIR.STRAIGHT){
 				car.setDistFromOrigin((this.segmentSize * car.outSegment 
 					+ this.crossingLength + this.segmentSize * percentage) * -1);
@@ -147,7 +142,7 @@ function OutQueue(roadLength, segmentSize, crossroadRadius, pivotDist, scene){
 	this.endTick = function(){
 		while(this.crossedQueue.length > 0 && this.crossedQueue[0].outSegment 
 				== this.segmentNumber -2){
-			var car = this.crossedQueue.shift();
+			let car = this.crossedQueue.shift();
 			if(car.turnDir == TURN_DIR.STRAIGHT){
 				this.scene.remove(car.mainParent);
 			} else {

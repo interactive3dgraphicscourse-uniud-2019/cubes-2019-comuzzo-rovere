@@ -4,12 +4,12 @@
 */
 function Pino(Ax, Ay, Az){
 
-        this.Tronco=new THREE.Mesh( box,MARRONE_MESH);
-        this.Foglie=new THREE.Mesh( box , VERDE_SCURO_MESH);
-        this.Foglie2=new THREE.Mesh(  box, VERDE_SCURO_MESH);
-        this.Foglie3=new THREE.Mesh(  box, VERDE_SCURO_MESH);
-        this.Foglie4=new THREE.Mesh(  box, VERDE_SCURO_MESH);
-        this.Foglie5=new THREE.Mesh(  box, VERDE_SCURO_MESH);
+        this.Tronco=new THREE.Mesh( box,MESH.BROWN);
+        this.Foglie=new THREE.Mesh( box , MESH.DARK_GREEN);
+        this.Foglie2=new THREE.Mesh(  box, MESH.DARK_GREEN);
+        this.Foglie3=new THREE.Mesh(  box, MESH.DARK_GREEN);
+        this.Foglie4=new THREE.Mesh(  box, MESH.DARK_GREEN);
+        this.Foglie5=new THREE.Mesh(  box, MESH.DARK_GREEN);
 
         this.Tronco.scale.y=3;
         this.Tronco.position.x=Ax;

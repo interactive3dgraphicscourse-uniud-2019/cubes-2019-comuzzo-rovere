@@ -1,13 +1,13 @@
 
 //definiion for the state of the traffic light
-TRAFFIC_LIGHT_STATES = {GREEN: {VAL: 1, COLOR_ON: 0x00ff00, COLOR_OFF: 0x005500},
+const TRAFFIC_LIGHT_STATES = {GREEN: {VAL: 1, COLOR_ON: 0x00ff00, COLOR_OFF: 0x005500},
 	YELLOW: {VAL: 2, COLOR_ON: 0xffff00, COLOR_OFF: 0x555500},
 	RED: {VAL: 3, COLOR_ON: 0xff0000, COLOR_OFF: 0x550000}};
 
 function trafficLight(posX, posZ, rotY){
 	
 	//generating the vertical and horizontal pole for the traffic light
-	this.poleVertical = new THREE.Mesh( box, GRIGIO_MESH);
+	this.poleVertical = new THREE.Mesh( box, MESH.GREY);
 	this.poleVertical.scale.x=0.3;
 	this.poleVertical.scale.y=6;
 	this.poleVertical.scale.z=0.3;
@@ -16,7 +16,7 @@ function trafficLight(posX, posZ, rotY){
 	this.poleVertical.position.z = posZ;
 	this.poleVertical.rotation.y = rotY;
 
-	this.poleHorizontal = new THREE.Mesh(box, GRIGIO_MESH);
+	this.poleHorizontal = new THREE.Mesh(box, MESH.GREY);
 	this.poleHorizontal.scale.x=10;
 	this.poleHorizontal.scale.y=0.3/6;
 	this.poleHorizontal.position.x = -1.5/0.3;

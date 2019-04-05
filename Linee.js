@@ -2,8 +2,8 @@
 
 /*
 creates the scene:the crossroad, the sidewalk, the grass and the lines in the center of the streets
-crossroadRadius is the raius of the crossroad central square
-roadLength is the length of the street from the side of the central square
+crossroadRadius is the radius of the crossroad central square
+roadLength is the length of the street from the center of the central square
 */
 function CrossroadStreet(crossroadRadius, roadLength){
 	var laneLineMaterial = new THREE.LineBasicMaterial({color : WHITE, linewidth:10});
@@ -32,27 +32,27 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.StradaSE.position.x= crossroadRadius /2 ;
 	this.StradaSE.position.z= l ;
 	this.StradaES=this.StradaSW.clone();
-	this.StradaES.rotation.y=90 * Math.PI/180;
+	this.StradaES.rotation.y= ANGLE_90;
 	this.StradaES.position.x= l;
 	this.StradaES.position.z= crossroadRadius /2;
 	this.StradaEN=this.StradaSW.clone();
-	this.StradaEN.rotation.y=90 * Math.PI/180;
+	this.StradaEN.rotation.y= ANGLE_90;
 	this.StradaEN.position.z= -crossroadRadius /2;
 	this.StradaEN.position.x= l;
 	this.StradaNE=this.StradaSW.clone();
-	this.StradaNE.rotation.y=180 * Math.PI/180;
+	this.StradaNE.rotation.y= ANGLE_180;
 	this.StradaNE.position.z= -l;
 	this.StradaNE.position.x= crossroadRadius /2;
 	this.StradaNW=this.StradaSW.clone();
-	this.StradaNW.rotation.y=180 * Math.PI/180;
+	this.StradaNW.rotation.y= ANGLE_180;
 	this.StradaNW.position.z= -l;
 	this.StradaNW.position.x= -crossroadRadius /2;
 	this.StradaWN=this.StradaSW.clone();
-	this.StradaWN.rotation.y=270 * Math.PI/180;
+	this.StradaWN.rotation.y= ANGLE_270;
 	this.StradaWN.position.z= -crossroadRadius /2;
 	this.StradaWN.position.x= -l;
 	this.StradaWS=this.StradaSW.clone();
-	this.StradaWS.rotation.y=270 * Math.PI/180;
+	this.StradaWS.rotation.y= ANGLE_270;
 	this.StradaWS.position.z= crossroadRadius /2;
 	this.StradaWS.position.x= -l;
 
@@ -66,27 +66,27 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.MarciaSE.position.x=crossroadRadius + 1.4;
 	this.MarciaSE.position.z=l ;
 	this.MarciaES=this.MarciaSW.clone();
-	this.MarciaES.rotation.y=90 * Math.PI/180;
+	this.MarciaES.rotation.y=ANGLE_90;
 	this.MarciaES.position.x= l ;
 	this.MarciaES.position.z= crossroadRadius + 1.4;
 	this.MarciaEN=this.MarciaSW.clone();
-	this.MarciaEN.rotation.y=90 * Math.PI/180;
+	this.MarciaEN.rotation.y=ANGLE_90;
 	this.MarciaEN.position.z= -(crossroadRadius + 1.4);
 	this.MarciaEN.position.x= l;
 	this.MarciaNE=this.MarciaSW.clone();
-	this.MarciaNE.rotation.y=180 * Math.PI/180;
+	this.MarciaNE.rotation.y=ANGLE_180;
 	this.MarciaNE.position.z= - l;
 	this.MarciaNE.position.x= crossroadRadius + 1.4;
 	this.MarciaNW=this.MarciaSW.clone();
-	this.MarciaNW.rotation.y=180 * Math.PI/180;
+	this.MarciaNW.rotation.y=ANGLE_180;
 	this.MarciaNW.position.z= -l;
 	this.MarciaNW.position.x= -(crossroadRadius + 1.4);
 	this.MarciaWN=this.MarciaSW.clone();
-	this.MarciaWN.rotation.y=270 * Math.PI/180;
+	this.MarciaWN.rotation.y=ANGLE_270;
 	this.MarciaWN.position.z= -(crossroadRadius + 1.4);
 	this.MarciaWN.position.x= -l ;
 	this.MarciaWS=this.MarciaSW.clone();
-	this.MarciaWS.rotation.y=270 * Math.PI/180;
+	this.MarciaWS.rotation.y=ANGLE_270;
 	this.MarciaWS.position.z= crossroadRadius+ 1.4;
 	this.MarciaWS.position.x= -l;
 
@@ -96,7 +96,7 @@ function CrossroadStreet(crossroadRadius, roadLength){
     //creates all the lines between in the middle of the streets
     var straightLine = new THREE.Geometry();
     straightLine.vertices.push(
-        new THREE.Vector3(0,  0, crossroadRadius),
+        new THREE.Vector3(0, 0, crossroadRadius),
         new THREE.Vector3(0, 0, roadLength)
     );
     this.laneDividerS = new THREE.Line(straightLine, laneLineMaterial);
@@ -132,6 +132,17 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.crossroadCenter.add(this.MarciaNW);
 	this.crossroadCenter.add(this.MarciaWN);
 	this.crossroadCenter.add(this.MarciaWS);
+	
+	this.streetTerrainX = new THREE.Mesh( box, MESH.BROWN);
+	this.streetTerrainZ = this.streetTerrainX.clone();
+	this.streetTerrainX.position.y = -5;
+	this.streetTerrainX.scale.y=10;
+	this.streetTerrainX.scale.x=146;
+	this.streetTerrainX.scale.z=20;
+	this.streetTerrainZ = this.streetTerrainX.clone();
+	this.streetTerrainZ.rotation.y = ANGLE_90;
+	this.crossroadCenter.add(this.streetTerrainX);
+	this.crossroadCenter.add(this.streetTerrainZ);
 	
 
 	this.mainParent = this.crossroadCenter;

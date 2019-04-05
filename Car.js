@@ -1,6 +1,5 @@
-STREETS = {NORTH: 0, EAST: 1, SOUTH: 2, WEST: 3};
-TURN_DIR = {LEFT: 0, STRAIGHT: 1, RIGHT: 2};
-PIVOT_DIST = 9;
+const STREETS = {NORTH: 0, EAST: 1, SOUTH: 2, WEST: 3};
+const TURN_DIR = {LEFT: 0, STRAIGHT: 1, RIGHT: 2};
 
 function Car(street, turn, mesh){
 	this.street = street;
@@ -52,26 +51,28 @@ function Car(street, turn, mesh){
 		}
 	}
 	
-    this.carBody = new THREE.Mesh(box , this.mesh);
+	let bodyCube = new THREE.Mesh(box , this.mesh);
+	let wheelCube = new THREE.Mesh(box, MESH.BLACK);
+    this.carBody = bodyCube.clone();
 	this.carBody.position.y = 11.2;
 	this.carBody.scale.x = 2;
 	this.carBody.scale.z = 4;
 
-	this.cockpit = new THREE.Mesh(box, this.mesh);
+	this.cockpit = bodyCube.clone();
 	this.cockpit.scale.y=0.7;
 	this.cockpit.scale.z=0.75
 	this.cockpit.scale.x=0.5
     this.cockpit.position.y=0.7;
-	this.wheelBL = new THREE.Mesh( box, NERO_MESH);
+	this.wheelBL = wheelCube.clone();
 	this.wheelBL.scale.x=0.4;
 	this.wheelBL.scale.z=0.2;
-	this.wheelBR = new THREE.Mesh( box, NERO_MESH);
+	this.wheelBR = wheelCube.clone();
 	this.wheelBR.scale.x=0.4;
 	this.wheelBR.scale.z=0.2;
-	this.wheelFL = new THREE.Mesh( box, NERO_MESH);
+	this.wheelFL = wheelCube.clone();
 	this.wheelFL.scale.x=0.4;
 	this.wheelFL.scale.z=0.2;
-	this.wheelFR = new THREE.Mesh( box, NERO_MESH);
+	this.wheelFR = wheelCube.clone();
 	this.wheelFR.scale.x=0.4;
 	this.wheelFR.scale.z=0.2;
 	
