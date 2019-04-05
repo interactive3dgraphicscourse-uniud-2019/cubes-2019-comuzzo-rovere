@@ -26,29 +26,29 @@ function trafficLight(posX, posZ, rotY){
 	this.lightSupport = new THREE.Mesh(box, new THREE.MeshBasicMaterial({color: BLACK}));
 	this.lightSupport.position.x= -1.5 * 0.3;
 	this.lightSupport.scale.z=3;
-	this.lightSupport.scale.y=3;
+	this.lightSupport.scale.y=9;
 	this.lightSupport.scale.x=0.4;
 	
 
 	//generating and moving all the lights
 	this.greenLight = new THREE.Mesh(box, new THREE.MeshBasicMaterial({color: TRAFFIC_LIGHT_STATES.GREEN.COLOR_OFF}));
 	this.greenLight.scale.x=0.4;
-	this.greenLight.scale.y=0.5;
+	this.greenLight.scale.y=0.15;
 	this.greenLight.scale.z=0.4;
-	this.greenLight.position.y = -0.8;
+	this.greenLight.position.y = -0.3;
 	this.greenLight.position.z = 0.5;
 	
 	this.yellowLight = new THREE.Mesh(box, new THREE.MeshBasicMaterial({color: TRAFFIC_LIGHT_STATES.YELLOW.COLOR_OFF}));
 	this.yellowLight.scale.x=0.4;
-	this.yellowLight.scale.y=0.5;
+	this.yellowLight.scale.y=0.15;
 	this.yellowLight.scale.z=0.4;
 	this.yellowLight.position.z = 0.5;
 
 	this.redLight = new THREE.Mesh(box, new THREE.MeshBasicMaterial({color: TRAFFIC_LIGHT_STATES.RED.COLOR_OFF}));
 	this.redLight.scale.x=0.6;
-	this.redLight.scale.y=0.7;
+	this.redLight.scale.y=0.25;
 	this.redLight.scale.z=0.6;
-	this.redLight.position.y = 0.8;
+	this.redLight.position.y = 0.3;
 	this.redLight.position.z = 0.5;
 
 

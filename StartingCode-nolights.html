@@ -30,60 +30,60 @@
 	</head>
 	<body>
 		
-		<script>
-		// COLORS;
-		BLUE = 0x0000ff;
-		BLU_MESH = new THREE.MeshBasicMaterial({color: BLUE});
-		SEMAPHORE_GREY = 0xcccccc;
-		BLACK = 0x000000;
-		CARS_MESH=[
-			new THREE.MeshBasicMaterial({color:0xb3b3b3}),
-			new THREE.MeshBasicMaterial({color:0xbb0a30}),
-			new THREE.MeshBasicMaterial({color:0xb6b1a9}),
-			new THREE.MeshBasicMaterial({color:0xBF3EFF}),
-			new THREE.MeshBasicMaterial({color:0xFFF536})
-		];
-		WHITE=0xffffff;
-		GRIGIO_MESH=new THREE.MeshBasicMaterial({color: SEMAPHORE_GREY});
-		VERDE_CHIARO_MESH= new THREE.MeshBasicMaterial({color:0x00ff00});
-		VERDE_MESH= new THREE.MeshBasicMaterial({color:0x009900});
-		VERDE_SCURO_MESH=new THREE.MeshBasicMaterial({color:0x004400});
-		NERO_MESH=new THREE.MeshBasicMaterial({color:BLACK});
-		MARRONE_MESH= new THREE.MeshBasicMaterial({color:0x654321});
-		ROSSO_MESH= new THREE.MeshBasicMaterial({color:0xff00000});
+	<script>
+					// COLORS;
+					BLUE = 0x0000ff;
+					BLU_MESH = new THREE.MeshBasicMaterial({color: BLUE});
+					SEMAPHORE_GREY = 0xcccccc;
+					BLACK = 0x000000;
+					CARS_MESH=[
+						new THREE.MeshBasicMaterial({color:0xb3b3b3}),
+						new THREE.MeshBasicMaterial({color:0xbb0a30}),
+						new THREE.MeshBasicMaterial({color:0xb6b1a9}),
+						new THREE.MeshBasicMaterial({color:0xBF3EFF}),
+						new THREE.MeshBasicMaterial({color:0xFFF536})
+					];
+					WHITE=0xffffff;
+					GRIGIO_MESH=new THREE.MeshBasicMaterial({color: SEMAPHORE_GREY});
+					VERDE_CHIARO_MESH= new THREE.MeshBasicMaterial({color:0x00ff00});
+					VERDE_MESH= new THREE.MeshBasicMaterial({color:0x009900});
+					VERDE_SCURO_MESH=new THREE.MeshBasicMaterial({color:0x004400});
+					NERO_MESH=new THREE.MeshBasicMaterial({color:BLACK});
+					MARRONE_MESH= new THREE.MeshBasicMaterial({color:0x654321});
+					ROSSO_MESH= new THREE.MeshBasicMaterial({color:0xff00000});
 		
+					RAD_TO_DEG_COEFF = Math.PI/180;
+					ANGLE_90 = 90 * RAD_TO_DEG_COEFF;
+					ANGLE_180 = 180 * RAD_TO_DEG_COEFF;
+					ANGLE_270 = 270 * RAD_TO_DEG_COEFF;
 		
-		RAD_TO_DEG_COEFF = Math.PI/180;
-		ANGLE_90 = 90 * RAD_TO_DEG_COEFF;
-		ANGLE_180 = 180 * RAD_TO_DEG_COEFF;
-		ANGLE_270 = 270 * RAD_TO_DEG_COEFF;
-		
-		TICK_TIME = 3500;
+					TICK_TIME = 3500;
 
-		var box = new THREE.BoxGeometry(1,1,1);
-		var crossroadRadius = 7;
-		var roadLength = 66;
-		var segmentSize = 6;
-		var scene, camera, renderer, controls, stats;
-		var crossroad, nord, sud, est, ovest;
-		var gui, spawn;
-		var lastTickTime;
-		var carQueue, outQueue;
-		var trafficLightStateNS;
-		var trafficLightStateEW;
-		var wantNSGreen;
+					var box = new THREE.BoxGeometry(1,1,1);
+					var crossroadRadius = 7;
+					var roadLength = 72;
+					var segmentSize = 6;
+					var scene, camera, renderer, controls, stats;
+					var crossroad, nord, sud, est, ovest;
+					var gui, spawn;
+					var lastTickTime;
+					var carQueue, outQueue;
+					var trafficLightStateNS;
+					var trafficLightStateEW;
+					var wantNSGreen;
+					var rowLength = 146;
+					var data;
+					var heightMatrix = [];
+					var options = {
+						spawnEast : 0.1,
+						spawnWest : 0.1,
+						spawnNorth : 0.1,
+						spawnSouth : 0.1,
+						VerdeSuZ: function() { wantNSGreen = true;  },
+		  			VerdeSuX: function() { wantNSGreen = false; }
+					};
 
-
-		var options = {
-			spawnEast : 0.1,
-			spawnWest : 0.1,
-			spawnNorth : 0.1,
-			spawnSouth : 0.1,
-			VerdeSuZ: function() { wantNSGreen = true;  },
-		  	VerdeSuX: function() { wantNSGreen = false; }
-		};
-
-	function Start() {
+		function Start() {
 			scene = new THREE.Scene();
 			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -110,6 +110,102 @@
 			gui.add(options, 'spawnNorth' ,0 ,0.8 ,0.01).name("spawnrateNorth");
 			gui.add(options, 'spawnWest' ,0 ,0.8 ,0.01).name("spawnrateWest");
 			camera.position.z = 20;
+
+
+			var img = new Image();
+			img.src = "textures/heightmap146.png";
+			img.onload = function () {
+  
+				//get height data from img
+				makeGrid(getHeightData(img, 0.1));
+  
+				for(var i=0; i<50; i++){
+				xAlbero= crossroadRadius *1.5 + ( Math.round( Math.round ( Math.random()* 6 ) * ( ( roadLength - 2 * crossroadRadius) / 6 ) ) );
+				zAlbero= crossroadRadius *1.5 + ( Math.round ( Math.round ( Math.random()* 6 ) * ( ( roadLength - 2 * crossroadRadius) / 6 ) ) );
+				var x = Math.round(Math.random() *3 );
+				
+				switch(x){
+
+					case 0:
+					yAlbero=heightMatrix[Math.floor(zAlbero)+ rowLength/2 ] [Math.floor(xAlbero) + rowLength/2 ];
+						if(Math.round(Math.random() )==0 ) {	
+							Albero1= new Albero(xAlbero, yAlbero, zAlbero);
+							scene.add(Albero1.Tronco);		
+						}else{
+							Pino1=new Pino(xAlbero, yAlbero, zAlbero);
+							scene.add(Pino1.Tronco);
+						}
+					break
+					case 1:
+						xAlbero*= -1;
+						yAlbero= heightMatrix[Math.floor(zAlbero + rowLength/2)] [Math.floor(xAlbero + rowLength/2)];
+						if(Math.round(Math.random() )==0 ) {
+							Albero1= new Albero(xAlbero, yAlbero, zAlbero);
+							scene.add(Albero1.Tronco);		
+						}else{
+							Pino1=new Pino(xAlbero, yAlbero, zAlbero);
+							scene.add(Pino1.Tronco);
+						}
+					break
+					case 2:
+						zAlbero*= -1;
+						yAlbero= heightMatrix[Math.floor(zAlbero + rowLength/2)] [Math.floor(xAlbero + rowLength/2)];
+						if(Math.round(Math.random() )==0 ) {
+							Albero1= new Albero(xAlbero, yAlbero, zAlbero);
+							scene.add(Albero1.Tronco);		
+						}else{
+							Pino1=new Pino(xAlbero, yAlbero, zAlbero);
+							scene.add(Pino1.Tronco);
+						}
+					break
+					case 3:
+						xAlbero*= -1;
+						zAlbero*= -1;
+						yAlbero= heightMatrix[Math.floor(zAlbero + rowLength/2)] [Math.floor(xAlbero + rowLength/2)];
+						if(Math.round(Math.random() )==0 ) {
+							Albero1= new Albero(xAlbero, yAlbero, zAlbero);
+							scene.add(Albero1.Tronco);		
+						}else{
+							Pino1=new Pino(xAlbero, yAlbero, zAlbero);
+							scene.add(Pino1.Tronco);
+						}
+					break
+				}
+			}
+		}
+	
+			
+			
+			
+			
+
+
+			function getHeightData(img,scale) {
+  
+			if (scale == undefined) scale=1;
+				var canvas = document.createElement( 'canvas' );
+				canvas.width = img.width;
+		 		canvas.height = img.height;
+				 var context = canvas.getContext( '2d' );
+				 var size = img.width * img.height;
+				console.log(size);
+				data = new Float32Array( size );
+				 context.drawImage(img,0,0);
+				for ( var i = 0; i < size; i ++ ) {
+					data[i] = 0
+				 }
+			var imgd = context.getImageData(0, 0, img.width, img.height);
+			var pix = imgd.data;
+			var j=0;
+			for (var i = 0; i<pix.length; i +=4) {
+					var all = pix[i]+pix[i+1]+pix[i+2];  // all is in range 0 - 255*3
+					data[j++] = scale*all/3;   
+			}
+	return data;
+	}
+
+
+
 			carEastQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.EAST);
 			carSouthQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.SOUTH);
 			carWestQueue = new CarQueue(roadLength, segmentSize, crossroadRadius, PIVOT_DIST, scene, STREETS.WEST);
@@ -131,7 +227,11 @@
 			trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
 			wantNSGreen = true;
 
-			
+			crossroad.mainParent.position.y=10;
+			sud.mainParent.position.y+=10;
+			est.mainParent.position.y+=10;
+			nord.mainParent.position.y+=10;
+			ovest.mainParent.position.y+=10;
 			scene.add(crossroad.mainParent);
 			scene.add(sud.mainParent);
 			scene.add(est.mainParent);
@@ -147,58 +247,8 @@
 			carNorthQueue.endTick(1);
 			carNorthQueue.startTick(0);
 			lastTickTime = Date.now();
-
-			for(var i=0; i<50; i++){
-				xAlbero= crossroadRadius *1.5 +( Math.round( Math.random()* (roadLength- 2*crossroadRadius)));
-				zAlbero= crossroadRadius *1.5 +( Math.round( Math.random()* (roadLength- 2*crossroadRadius)));
-				yAlbero= Matrice[xAlbero][zAlbero];
-				var x = Math.round(Math.random() *3 );
-				switch(x){
-
-					case 0:
-						if(Math.round(Math.random() )==0 ) {
-							Albero1= new Albero(xAlbero, yAlbero, zAlbero);
-							scene.add(Albero1.Tronco);		
-						}else{
-							Pino1=new Pino(xAlbero, yAlbero, zAlbero);
-							scene.add(Pino1.Tronco);
-						}
-					break
-					case 1:
-						xAlbero*= -1;
-						if(Math.round(Math.random() )==0 ) {
-							Albero1= new Albero(xAlbero, yAlbero, zAlbero);
-							scene.add(Albero1.Tronco);		
-						}else{
-							Pino1=new Pino(xAlbero, yAlbero, zAlbero);
-							scene.add(Pino1.Tronco);
-						}
-					break
-					case 2:
-						zAlbero*= -1;
-						if(Math.round(Math.random() )==0 ) {
-							Albero1= new Albero(xAlbero, yAlbero, zAlbero);
-							scene.add(Albero1.Tronco);		
-						}else{
-							Pino1=new Pino(xAlbero, yAlbero, zAlbero);
-							scene.add(Pino1.Tronco);
-						}
-					break
-					case 3:
-						xAlbero*= -1;
-						zAlbero*= -1;
-						if(Math.round(Math.random() )==0 ) {
-							Albero1= new Albero(xAlbero, yAlbero, zAlbero);
-							scene.add(Albero1.Tronco);		
-						}else{
-							Pino1=new Pino(xAlbero, yAlbero, zAlbero);
-							scene.add(Pino1.Tronco);
-						}
-					break
-				}
-			}
-			
 		}
+			
 
 		function Update() {
 			requestAnimationFrame( Update );
@@ -286,8 +336,11 @@
 				outQueue.update(passedTime/TICK_TIME);
 			}
 		
+
+
+
       Render();
-    }
+		}
     
     function Render() {
       renderer.render(scene, camera);
@@ -325,7 +378,44 @@
     
     Start();
     Update();
-      
+		
+		function makeGrid(data){
+			for(var i = 1; i < rowLength-1; i++){
+				var row = [];
+				for(var j = 1; j < rowLength-1; j++){
+					var rowOffset = rowLength * i;
+					if((i < 64 || i > 82) && (j < 64 || j > 82)){
+						var height = data[rowOffset + j];
+						var x = j + 0.5 - rowLength/2;
+						var z = i + 0.5 - rowLength/2;
+						var block   = new THREE.Mesh(box , new THREE.MeshBasicMaterial({color: 0x006600}));
+						block.position.x = x;
+						block.position.z = z;
+						block.scale.y = height;
+						block.position.y = height/2;
+						scene.add(block);
+						row[j] = height;
+					} else {
+						row[j] = 10.0;
+						var height = 10
+						var x = j + 0.5 - rowLength/2;
+						var z = i + 0.5 - rowLength/2;
+						var block   = new THREE.Mesh(box ,MARRONE_MESH);
+						block.position.x = x;
+						block.position.z = z;
+						block.scale.y = height;
+						block.position.y = height/2;
+						scene.add(block);
+						row[j] = height;
+					}
+				}
+				heightMatrix[i] = row;
+			}
+		}
+
+	
+	
+
     </script>
   </body>
 </html>

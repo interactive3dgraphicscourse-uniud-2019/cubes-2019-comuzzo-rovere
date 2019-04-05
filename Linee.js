@@ -58,8 +58,8 @@ function CrossroadStreet(crossroadRadius, roadLength){
 
     //creates a 
 	this.MarciaSW = new THREE.Mesh( box, coloreMarciapiede);
-	this.MarciaSW.scale.x=crossroadRadius/2;
-	this.MarciaSW.scale.z=lstrada;
+	this.MarciaSW.scale.x=crossroadRadius/2 ;
+	this.MarciaSW.scale.z=lstrada - 0.1;
 	this.MarciaSW.position.x=-(crossroadRadius + 1.4);
 	this.MarciaSW.position.z= l ;
 	this.MarciaSE=this.MarciaSW.clone();
@@ -91,22 +91,7 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.MarciaWS.position.x= -l;
 
 
-	//creates a square of grass and clones it and moves them to the four angles
-	this.ErbaSW = new THREE.Mesh( box, coloreErba);
-	this.ErbaSW.scale.x = lstrada - crossroadRadius/2;
-	this.ErbaSW.scale.z = lstrada - crossroadRadius/2;
-	this.ErbaSW.scale.y = 0.5;
-	this.ErbaSW.position.x = -(1.2*crossroadRadius+ lstrada/2);
-	this.ErbaSW.position.z = (1.2*crossroadRadius+ lstrada/2);
-	this.ErbaSE = this.ErbaSW.clone();
-	this.ErbaSW.position.x = (1.2*crossroadRadius+ lstrada/2);
-	this.ErbaSW.position.z = (1.2*crossroadRadius+ lstrada/2);
-	this.ErbaNE = this.ErbaSW.clone();
-	this.ErbaNE.position.x = (1.2*crossroadRadius+ lstrada/2);
-	this.ErbaNE.position.z = -(1.2*crossroadRadius+ lstrada/2);
-	this.ErbaNW = this.ErbaSW.clone();
-	this.ErbaNW.position.x = -(1.2*crossroadRadius+ lstrada/2);
-	this.ErbaNW.position.z = -(1.2*crossroadRadius+ lstrada/2);
+	
 
     //creates all the lines between in the middle of the streets
     var straightLine = new THREE.Geometry();
@@ -147,10 +132,7 @@ function CrossroadStreet(crossroadRadius, roadLength){
 	this.crossroadCenter.add(this.MarciaNW);
 	this.crossroadCenter.add(this.MarciaWN);
 	this.crossroadCenter.add(this.MarciaWS);
-	this.crossroadCenter.add(this.ErbaSW);
-	this.crossroadCenter.add(this.ErbaSE);
-	this.crossroadCenter.add(this.ErbaNE);
-	this.crossroadCenter.add(this.ErbaNW);
+	
 
 	this.mainParent = this.crossroadCenter;
 }

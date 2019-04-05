@@ -53,7 +53,7 @@ function Car(street, turn, mesh){
 	}
 	
     this.carBody = new THREE.Mesh(box , this.mesh);
-	this.carBody.position.y = 1.1;
+	this.carBody.position.y = 11.2;
 	this.carBody.scale.x = 2;
 	this.carBody.scale.z = 4;
 
