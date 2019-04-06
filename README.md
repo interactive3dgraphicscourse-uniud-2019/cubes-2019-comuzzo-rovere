@@ -39,13 +39,13 @@ La camera osserva la scena da una posizione di default, ma l' utente puo muoverl
 
 
 
-![](screenshot\multiple.PNG)
+![](screenshot/multiple.PNG)
 
 
 
 
 
-![](screenshot\full.PNG)
+![](screenshot/full.PNG)
 
 
 
