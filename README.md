@@ -33,7 +33,7 @@ La camera osserva la scena da una posizione di default, ma l' utente puo muoverl
 
 ### Screenshot
 
-![](screenshot\sopra.PNG)
+![](<https://github.com/interactive3dgraphicscourse-uniud-2019/cubes-2019-comuzzo-rovere/tree/master/screenshot/sopra.PNG>)
 
 
 
