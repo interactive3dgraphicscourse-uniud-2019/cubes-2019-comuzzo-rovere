@@ -33,10 +33,33 @@ La camera osserva la scena da una posizione di default, ma l' utente puo muoverl
 
 ### Screenshot
 
-![](C:\Users\Andrea\Desktop\sopra.PNG)
+![](C:\xampp\htdocs\cubes-2019-comuzzo-rovere\screenshot\sopra.PNG)
 
 
 
-![](C:\Users\Andrea\Desktop\Queue.PNG)
+![](C:\xampp\htdocs\cubes-2019-comuzzo-rovere\screenshot\turning.PNG)
 
-![](C:\Users\Andrea\Desktop\Turn.PNG)
+
+
+
+
+![](C:\xampp\htdocs\cubes-2019-comuzzo-rovere\screenshot\multiple.PNG)
+
+
+
+
+
+
+
+
+
+
+
+
+
+![](C:\xampp\htdocs\cubes-2019-comuzzo-rovere\screenshot\full.PNG)
+
+
+
+
+
