@@ -133,7 +133,7 @@
 		
 		queues = [carNorthQueue, carSouthQueue, carEastQueue, carWestQueue];
 		
-		crossroad = new CrossroadStreet(CROSSROAD_RADIUS, ROAD_LENGTH);
+		crossroad = new CrossroadStreet();
 		sud = new trafficLight(CROSSROAD_RADIUS, CROSSROAD_RADIUS, 0);
 		est = new trafficLight(CROSSROAD_RADIUS, -CROSSROAD_RADIUS, ANGLE_90);
 		nord = new trafficLight(-CROSSROAD_RADIUS, -CROSSROAD_RADIUS, ANGLE_180);
@@ -314,10 +314,10 @@
 				treePosZs.push(zTree);
 				if(Math.round(Math.random() )==0 ) {
 					let tree = new Tree(xTree, yTree, zTree);
-					scene.add(tree.Tronco);
+					scene.add(tree.trunk);
 				}else{
 					let tree = new Spruce(xTree, yTree, zTree);
-					scene.add(tree.Tronco);
+					scene.add(tree.trunk);
 				}
 			}
 		}
