@@ -111,8 +111,9 @@
 		gui.add(options, "spawnSouth", 0, 100, 1).name("south traffic %");
 		gui.add(options, "spawnEast", 0, 100, 1).name("east traffic %");
 		gui.add(options, "spawnWest", 0, 100, 1).name("west traffic %");
-		camera.position.z = 20;
-
+		camera.position.z = 100;
+		camera.position.y = 70;
+		camera.lookAt(0,0,0);
 		var img = new Image();
 		img.src = "textures/heightmap.png";
 		img.onload = function () {
