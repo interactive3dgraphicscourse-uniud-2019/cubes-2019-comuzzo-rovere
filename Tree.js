@@ -2,7 +2,7 @@
 Function for the creation of a tree,
 Ax is the x coordinate and Az is the z coordinate, they indicate where to create the tree
 */
-    function Albero(Ax, Ay, Az){
+    function Tree(Ax, Ay, Az){
        
         this.Tronco=new THREE.Mesh( box, MESH.BROWN);
         this.Foglie=new THREE.Mesh( box, MESH.GREEN);

@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Starting Code for 1st Project 2017</title>
+		<title>CrossySimulation</title>
 		<style>
 		
 		body {
@@ -20,12 +20,12 @@
 		<script src="lib/stats.min.js"></script>
 		<script src="lib/Coordinates.js"></script>
 		<script src="lib/OrbitControls.js"></script>
-		<script src="Semaforo.js"></script>
-		<script src="Linee.js"></script>
+		<script src="Traffic_light.js"></script>
+		<script src="Crossroad.js"></script>
 		<script src="Car.js"></script>
 		<script src="lib/dat.gui.min.js"></script>
-		<script src="Albero.js"></script>
-		<script src="Pino.js"></script>
+		<script src="Tree.js"></script>
+		<script src="Spruce.js"></script>
 		<script src="Car_Queue.js"></script>
 	</head>
 	<body>
@@ -313,10 +313,10 @@
 				treePosXs.push(xTree);
 				treePosZs.push(zTree);
 				if(Math.round(Math.random() )==0 ) {
-					let tree = new Albero(xTree, yTree, zTree);
+					let tree = new Tree(xTree, yTree, zTree);
 					scene.add(tree.Tronco);
 				}else{
-					let tree = new Pino(xTree, yTree, zTree);
+					let tree = new Spruce(xTree, yTree, zTree);
 					scene.add(tree.Tronco);
 				}
 			}

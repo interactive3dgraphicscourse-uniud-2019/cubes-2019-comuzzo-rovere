@@ -2,7 +2,7 @@
         Function for the creation of a pine,
         Ax is the x coordinate and Az is the z coordinate, they indicate where to create the pine
 */
-function Pino(Ax, Ay, Az){
+function Spruce(Ax, Ay, Az){
 
         this.Tronco=new THREE.Mesh( box,MESH.BROWN);
         this.Foglie=new THREE.Mesh( box , MESH.DARK_GREEN);
