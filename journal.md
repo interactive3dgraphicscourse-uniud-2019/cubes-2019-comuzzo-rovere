@@ -1,6 +1,9 @@
 ### 27/03/2019
 - Abbiamo scelto di fare una rappresentazione in stile voxel di un incrocio stradale
 
+### Primo mock-up
+![mock-up con le strade dell'incrocio rappresentate da linee](screenshot/mockup.jpg)
+
 ---
 
 ### 28/03/2019
@@ -48,3 +51,14 @@
 
 ### 06/04/2019
 - La linea che divide le corsie implementata tramite la classe THREE.Line aveva dei brutti effetti visivi da certe angolazioni così la abbiamo sostituita con una BoxGeometry
+
+### Prima
+
+![un effetto della linea implentata con THREE.Line](screenshot/line1.png)
+
+![un altro effetto della linea implentata con THREE.Line](screenshot/line2.png)
+
+
+### Dopo
+
+![dopo la correzione](screenshot/multiple.PNG)
