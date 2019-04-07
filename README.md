@@ -1,8 +1,8 @@
-# Primo progettino per il corso di Interactive 3d Graphics
+# First project for the course of Interactive 3d Graphics
 
-## Introduction
+## CrossySimulation
 
-CrossySimulation is a 3d simulation of a crossroad regulated by traffic lights where cars enter the scene at the end of the road, then turn left, right or proceeds straight, than continue driving on the chosen road before leaving the scene at the end of the road, it's possible to regulate the car's spawn rate on every lane and change the traffic light color using the controls in the GUI.
+CrossySimulation is a 3D simulation of a crossroad regulated by traffic lights which can be used as a fun way to explain the traffic code to children or as a way of killing time. In the scene the cars enter the scene at the start of the road and when they arrive to the traffic light they can turn left, right or proceeds straight respecting the traffic light and the traffic code. Crossed the crossroad the cars continue to go on the chosen street before leaving the scene at the end of the road. It's possible to regulate the traffic level on every lane and change the traffic light color using the controls in the GUI.
 
 ## Membri del grupo
 
@@ -11,41 +11,41 @@ CrossySimulation is a 3d simulation of a crossroad regulated by traffic lights w
 
 ## Scena
 
-La scena è ambientata in una zona rurale in cui è presente un incrocio tra quattor strade a due corsie, un numero di aberi e pini generarati in casualmente e alcune alture, tale incorcio è regolato da quattro semafori, uno per ogni strada, ogni intervallo di tempo una macchina può entrare nella scena da una o piu delle quattro strade, la frequenza con cui le macchine entrano nella scena per ogni strada può essere regolata tramite dei controlli della GUI.
+La scena è ambientata in una zona rurale in cui è presente un incrocio tra quattro strade a due corsie, un numero di abeti e alberi posizionati in maniera casuale e alcune alture. Tale incrocio è regolato da quattro semafori. Ogni 3 secondi una macchina può entrare nella scena da una o piu delle quattro strade.
 
- Le macchine procedono lungo la strada fino all'incrocio, una volta arrivate in prossimita dell' ncrocio le macchine decidono se girare a destra, a sinistra o continuare dritto, inoltre controllano se possono passare: controllano il colore del semaforo e danno la precedenza alle macchine alla loro destra se necessario. Una volta attraversato l' incrocio le auto proseguono fino alla fine della strada scelta, arrivate alla fine escono dalla scena, è inoltre possibile cambiare il colore dei semafori tramite l'apposio bottone della GUI.
+Le macchine procedono lungo la strada fino all'incrocio, una volta arrivate in prossimita dell'incrocio le macchine decidono se girare a destra, a sinistra o continuare dritto rispettando il codice della strada: controllando il colore del semaforo e dando la precedenza alle altre macchine se necessario. Se le macchine non possono attraversare l'incrocio si incolonnano mantendendo la distanza di sicurezza l'una dall'altra. Una volta attraversato l'incrocio le auto proseguono sulla strada scelta alla fine della quale escono dalla scena. 
 
-Se le macchine non possono attraversare l'incrocio si incolonnano mantendendo una distanza di sicurezza l'una dall' altra, le la colonna ragigunge la fine della strada nessun altra macchina verra generata in quella strada fino a quando almeno uno slot e libero.
-
-
+Utilizzando i pulsanti e gli slider dell'interfaccia è inoltre possibile cambiare il colore dei semafori e impostare il livello di traffico su ognuna delle quattro strade.
 
 ### Suddivisione del codice 
 
-- Il file principale è index.html, ;
-
-- nella cartella  sono stati inseriti tutti i codici necessari per la creazione degli alberi, delle macchine etc.
-
-  
+- index.html è il file principale ottenuto a partire da StartingCode-nolights.html che contiene il codice html, l'inizializzazione della scena e il rendering loop 
+- Tree.js contiene il codice per la generazione degli alberi
+- Spruce.js contiene il codice per la generazione degli abeti
+- Traffic_light.js contiene il codice per la generazione dei semafori
+- Car.js contiene il codice per la generazione delle automobili
+- Crossroad.js contiene il codice per la generazione delle strade e dei marciapiedi
+- Car_Queue.js contiene il codice relativo alla gestione delle code di automobili e alle animazioni delle macchine
 
 ## Camera
 
-La camera osserva la scena da una posizione di default, ma l' utente puo muoverla a piacere usando i comandi standard di rotazione, traslazione e zoom in e zoom out ( OrbitControl.js` ).
+La camera osserva la scena da una posizione di default ma l'utente può cambiare l'inquadratura muovendola e ruotandola e facendo zoom utilizzando rispettivamente i tasti destro e sinistro e la rotella del mouse ( *OrbitControl.js* ).
 
 ### Screenshot
 
-![](screenshot/sopra.PNG)
+![visione della scena dall'alto](screenshot/sopra.PNG)
 
 
 
 
 
-![](screenshot/multiple.PNG)
+![visione della scena da vicino](screenshot/multiple.PNG)
 
 
 
 
 
-![](screenshot/full.PNG)
+![visione della scena con un livello di traffico abbastanza elevato](screenshot/full.PNG)
 
 
 

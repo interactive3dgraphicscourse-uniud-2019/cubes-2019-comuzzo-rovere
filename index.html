@@ -71,7 +71,7 @@
 		const ROW_LENGTH = 146;
 		var scene, camera, renderer, controls, stats;
 		var carNorthQueue, carSouthQueue, carEastQueue, carWestQueue, queues;
-		var crossroad, nord, sud, est, ovest;
+		var crossroad, north, south, east, west;
 		var gui;
 		var lastTickTime;
 		var outQueue;
@@ -135,30 +135,30 @@
 		queues = [carNorthQueue, carSouthQueue, carEastQueue, carWestQueue];
 		
 		crossroad = new CrossroadStreet();
-		sud = new trafficLight(CROSSROAD_RADIUS, CROSSROAD_RADIUS, 0);
-		est = new trafficLight(CROSSROAD_RADIUS, -CROSSROAD_RADIUS, ANGLE_90);
-		nord = new trafficLight(-CROSSROAD_RADIUS, -CROSSROAD_RADIUS, ANGLE_180);
-		ovest = new trafficLight(-CROSSROAD_RADIUS, CROSSROAD_RADIUS, ANGLE_270);
+		south = new trafficLight(CROSSROAD_RADIUS, CROSSROAD_RADIUS, 0);
+		east = new trafficLight(CROSSROAD_RADIUS, -CROSSROAD_RADIUS, ANGLE_90);
+		north = new trafficLight(-CROSSROAD_RADIUS, -CROSSROAD_RADIUS, ANGLE_180);
+		west = new trafficLight(-CROSSROAD_RADIUS, CROSSROAD_RADIUS, ANGLE_270);
 			
-		sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-		est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-		nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-		ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+		south.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		east.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+		north.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+		west.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
 			
 		trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
 		trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
 		wantNSGreen = true;
 
 		crossroad.mainParent.position.y=10;
-		sud.mainParent.position.y+=10;
-		est.mainParent.position.y+=10;
-		nord.mainParent.position.y+=10;
-		ovest.mainParent.position.y+=10;
+		south.mainParent.position.y+=10;
+		east.mainParent.position.y+=10;
+		north.mainParent.position.y+=10;
+		west.mainParent.position.y+=10;
 		scene.add(crossroad.mainParent);
-		scene.add(sud.mainParent);
-		scene.add(est.mainParent);
-		scene.add(nord.mainParent);
-		scene.add(ovest.mainParent);
+		scene.add(south.mainParent);
+		scene.add(east.mainParent);
+		scene.add(north.mainParent);
+		scene.add(west.mainParent);
 		
 		for(let i = 0; i < 4; i++){
 			let q = queues[i];
@@ -256,29 +256,29 @@
 		if(trafficLightStateEW == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
 			trafficLightStateEW = TRAFFIC_LIGHT_STATES.RED.VAL;
 			trafficLightStateNS = TRAFFIC_LIGHT_STATES.GREEN.VAL;
-			est.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			ovest.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			sud.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-			nord.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			east.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			west.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			south.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			north.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 		} else if(trafficLightStateNS == TRAFFIC_LIGHT_STATES.YELLOW.VAL){
 			trafficLightStateNS = TRAFFIC_LIGHT_STATES.RED.VAL;
 			trafficLightStateEW = TRAFFIC_LIGHT_STATES.GREEN.VAL;
-			nord.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			sud.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
-			est.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
-			ovest.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			north.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			south.setState(TRAFFIC_LIGHT_STATES.RED.VAL);
+			east.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
+			west.setState(TRAFFIC_LIGHT_STATES.GREEN.VAL);
 		} else if(wantNSGreen
 					&& trafficLightStateNS == TRAFFIC_LIGHT_STATES.RED.VAL
 					&& trafficLightStateEW == TRAFFIC_LIGHT_STATES.GREEN.VAL){
 			trafficLightStateEW = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
-			est.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-			ovest.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+			east.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+			west.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 		} else if(!wantNSGreen
 					&& trafficLightStateEW == TRAFFIC_LIGHT_STATES.RED.VAL
 					&& trafficLightStateNS == TRAFFIC_LIGHT_STATES.GREEN.VAL){
 			trafficLightStateNS = TRAFFIC_LIGHT_STATES.YELLOW.VAL;
-			nord.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
-			sud.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+			north.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
+			south.setState(TRAFFIC_LIGHT_STATES.YELLOW.VAL);
 		}
 	}
 	

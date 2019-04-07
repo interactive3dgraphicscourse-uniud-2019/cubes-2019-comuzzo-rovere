@@ -1,5 +1,5 @@
 /*
-creates the scene:the crossroad, the sidewalk, the grass and the lines in the center of the streets
+creates the scene:the crossroad, the sidewalk and the lines in the center of the streets
 CROSSROAD_RADIUS is the radius of the crossroad central square
 ROAD_LENGTH is the length of the street from the center of the central square
 */
