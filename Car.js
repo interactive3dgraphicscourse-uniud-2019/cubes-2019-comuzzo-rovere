@@ -51,8 +51,8 @@ function Car(street, turn, mesh){
 		}
 	}
 	
-	let bodyCube = new THREE.Mesh(box , this.mesh);
-	let wheelCube = new THREE.Mesh(box, MESH.BLACK);
+	let bodyCube = new THREE.Mesh(BOX , this.mesh);
+	let wheelCube = new THREE.Mesh(BOX, MESH.BLACK);
     this.carBody = bodyCube.clone();
 	this.carBody.position.y = 11.2;
 	this.carBody.scale.x = 2;

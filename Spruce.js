@@ -4,8 +4,8 @@ Ax is the x coordinate and Az is the z coordinate, they indicate where to create
 */
 function Spruce(Ax, Ay, Az){
 
-	this.trunk = new THREE.Mesh(box, MESH.BROWN);
-    this.leaf = new THREE.Mesh(box, MESH.DARK_GREEN);
+	this.trunk = new THREE.Mesh(BOX, MESH.BROWN);
+    this.leaf = new THREE.Mesh(BOX, MESH.DARK_GREEN);
     this.leaf2 = this.leaf.clone();
     this.leaf3 = this.leaf.clone();
     this.leaf4 = this.leaf.clone();

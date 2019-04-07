@@ -4,8 +4,8 @@ Ax is the x coordinate and Az is the z coordinate, they indicate where to create
 */
 function Tree(Ax, Ay, Az){
        
-	this.trunk=new THREE.Mesh(box, MESH.BROWN);
-	this.leaf=new THREE.Mesh(box, MESH.GREEN);
+	this.trunk=new THREE.Mesh(BOX, MESH.BROWN);
+	this.leaf=new THREE.Mesh(BOX, MESH.GREEN);
         
 	this.trunk.scale.y = 6;
 	this.leaf.scale.x = 3;

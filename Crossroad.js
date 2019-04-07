@@ -10,13 +10,13 @@ function CrossroadStreet(){
 	const streetCenter = CROSSROAD_RADIUS + lenFromTrafficLight/2;
    
 	//creates the central square of the crossroad
-	this.center = new THREE.Mesh( box, streetMesh);
+	this.center = new THREE.Mesh(BOX, streetMesh);
 	this.center.scale.y = 0.1;
 	this.center.scale.z = CROSSROAD_RADIUS*2;
 	this.center.scale.x = CROSSROAD_RADIUS*2;
 
 	//creates a road then clones it and moves and rotates it to draw all the streets
-	this.streetSW = new THREE.Mesh(box, streetMesh);
+	this.streetSW = new THREE.Mesh(BOX, streetMesh);
 	this.streetSW.scale.x = CROSSROAD_RADIUS * 0.94;
 	this.streetSW.scale.y = 0.1;
 	this.streetSW.scale.z = lenFromTrafficLight;
@@ -50,7 +50,7 @@ function CrossroadStreet(){
 	this.streetWS.position.z = CROSSROAD_RADIUS/2;
 	this.streetWS.position.x = -streetCenter;
 
-	this.sidewalkSW = new THREE.Mesh( box, sidewalkMesh);
+	this.sidewalkSW = new THREE.Mesh(BOX, sidewalkMesh);
 	this.sidewalkSW.scale.x = CROSSROAD_RADIUS/2 ;
 	this.sidewalkSW.scale.z = lenFromTrafficLight - 0.1;
 	this.sidewalkSW.position.x = -(CROSSROAD_RADIUS + 1.4);
@@ -84,7 +84,7 @@ function CrossroadStreet(){
 	this.sidewalkWS.position.x = -streetCenter;
 
     //creates all the lines in the middle of the streets
-    this.laneDividerS = new THREE.Mesh(box, new THREE.MeshBasicMaterial({color:WHITE}));
+    this.laneDividerS = new THREE.Mesh(BOX, new THREE.MeshBasicMaterial({color:WHITE}));
 	this.laneDividerS.scale.x = 0.4;
 	this.laneDividerS.scale.y = 0.1;
 	this.laneDividerS.scale.z = lenFromTrafficLight;
@@ -125,7 +125,7 @@ function CrossroadStreet(){
 	this.crossroadCenter.add(this.sidewalkWN);
 	this.crossroadCenter.add(this.sidewalkWS);
 	
-	this.streetTerrainX = new THREE.Mesh( box, MESH.BROWN);
+	this.streetTerrainX = new THREE.Mesh( BOX, MESH.BROWN);
 	this.streetTerrainX.position.y = -5;
 	this.streetTerrainX.scale.y = 10;
 	this.streetTerrainX.scale.x = 146;
