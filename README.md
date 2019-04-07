@@ -61,7 +61,7 @@ Alcune possibili estensioni e miglioramenti sono:
 
 - Creare altri incroci nella scena e connetterli tramite delle strade al fine di creare un percorso più lungo e vario per ogni veicolo
 
-- Aggiungere altre decorazioni alla scena. cartelli stradali, abitazioni, nuvole, animali etc. al fine di renede il paesaggio più interesante
+- Aggiungere altre decorazioni alla scena: cartelli stradali, abitazioni, nuvole, animali etc. al fine di rendere il paesaggio più interessante
 
   
 
