@@ -11,7 +11,7 @@ CrossySimulation is a 3D simulation of a crossroad regulated by traffic lights w
 
 ## Scena
 
-La scena è ambientata in una zona rurale in cui è presente un incrocio tra quattro strade a due corsie, un numero di abeti e alberi posizionati in maniera casuale e alcune alture. Tale incrocio è regolato da quattro semafori. Ogni 3 secondi una macchina può entrare nella scena da una o piu delle quattro strade.
+La scena è ambientata in una zona rurale in cui è presente un incrocio tra quattro strade a due corsie, un numero di abeti e alberi posizionati in maniera casuale e alcune alture. Tale incrocio è regolato da quattro semafori. Ogni 3 secondi una macchina può entrare nella scena da una o più delle quattro strade.
 
 Le macchine procedono lungo la strada fino all'incrocio, una volta arrivate in prossimita dell'incrocio le macchine decidono se girare a destra, a sinistra o continuare dritto rispettando il codice della strada: controllando il colore del semaforo e dando la precedenza alle altre macchine se necessario. Se le macchine non possono attraversare l'incrocio si incolonnano mantendendo la distanza di sicurezza l'una dall'altra. Una volta attraversato l'incrocio le auto proseguono sulla strada scelta alla fine della quale escono dalla scena. 
 
@@ -57,11 +57,11 @@ La camera osserva la scena da una posizione di default ma l'utente puo cambiare 
 
 Alcune possibili estensioni e miglioramenti sono:
 
-- Creare altri tipi di veicoli come: moto, forgoni, camion etc
+- Creare altri tipi di veicoli come: moto, furgoni, camion etc.
 
-- Creare altri incroci nella scena e connetterli tramite delle strade al fine di creare un percorso piu lungo e vario per ogni veicolo
+- Creare altri incroci nella scena e connetterli tramite delle strade al fine di creare un percorso più lungo e vario per ogni veicolo
 
-- Aggiungere altre decorazioni alla scena. cartelli stradali, abitazioni, nuvole, animali etc. al fine di renede il paesagigo più interesante
+- Aggiungere altre decorazioni alla scena. cartelli stradali, abitazioni, nuvole, animali etc. al fine di renede il paesaggio più interesante
 
   
 
