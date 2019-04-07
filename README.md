@@ -15,21 +15,25 @@ La scena è ambientata in una zona rurale in cui è presente un incrocio tra qua
 
 Le macchine procedono lungo la strada fino all'incrocio, una volta arrivate in prossimita dell'incrocio le macchine decidono se girare a destra, a sinistra o continuare dritto rispettando il codice della strada: controllando il colore del semaforo e dando la precedenza alle altre macchine se necessario. Se le macchine non possono attraversare l'incrocio si incolonnano mantendendo la distanza di sicurezza l'una dall'altra. Una volta attraversato l'incrocio le auto proseguono sulla strada scelta alla fine della quale escono dalla scena. 
 
+## Interfaccia Utente
+
 Utilizzando i pulsanti e gli slider dell'interfaccia è inoltre possibile cambiare il colore dei semafori e impostare il livello di traffico su ognuna delle quattro strade.
+
+![Controlli GUI](screenshot/controls.PNG)
 
 ### Suddivisione del codice 
 
-- index.html è il file principale ottenuto a partire da StartingCode-nolights.html che contiene il codice html, l'inizializzazione della scena e il rendering loop 
-- Tree.js contiene il codice per la generazione degli alberi
-- Spruce.js contiene il codice per la generazione degli abeti
-- Traffic_light.js contiene il codice per la generazione dei semafori
-- Car.js contiene il codice per la generazione delle automobili
-- Crossroad.js contiene il codice per la generazione delle strade e dei marciapiedi
-- Car_Queue.js contiene il codice relativo alla gestione delle code di automobili e alle animazioni delle macchine
+- **index.html** è il file principale ottenuto a partire da StartingCode-nolights.html che contiene il codice html, l'inizializzazione della scena e il rendering loop 
+- **Tree.js** contiene il codice per la generazione degli alberi
+- **Spruce.js** contiene il codice per la generazione degli abeti
+- **Traffic_light.js** contiene il codice per la generazione dei semafori
+- **Car.js** contiene il codice per la generazione delle automobili
+- **Crossroad.js** contiene il codice per la generazione delle strade e dei marciapiedi
+- **Car_Queue.js** contiene il codice relativo alla gestione delle code di automobili e alle animazioni delle macchine
 
 ## Camera
 
-La camera osserva la scena da una posizione di default ma l'utente può cambiare l'inquadratura muovendola e ruotandola e facendo zoom utilizzando rispettivamente i tasti destro e sinistro e la rotella del mouse ( *OrbitControl.js* ).
+La camera osserva la scena da una posizione di default ma l'utente puo cambiare l'inquadratura muovendola e ruotandola e facendo zoom utilizzando rispettivamente i tasti destro e sinistro e la rotella del mouse ( *OrbitControl.js* ).
 
 ### Screenshot
 
@@ -49,5 +53,15 @@ La camera osserva la scena da una posizione di default ma l'utente può cambiare
 
 
 
+## Futuri sviluppi
 
+Alcune possibili estensioni e miglioramenti sono:
+
+- Creare altri tipi di veicoli come: moto, forgoni, camion etc
+
+- Creare altri incroci nella scena e connetterli tramite delle strade al fine di creare un percorso piu lungo e vario per ogni veicolo
+
+- Aggiungere altre decorazioni alla scena. cartelli stradali, abitazioni, nuvole, animali etc. al fine di renede il paesagigo più interesante
+
+  
 
